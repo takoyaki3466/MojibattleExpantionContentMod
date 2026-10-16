@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:eyebrow_passive_marker",
+  "type": "critical_rate",
+  "target": "SUPPORT",
+  "magnitude": 0.0,
+  "intervalSeconds": 0.0,
+  "durationSeconds": 0.0,
+  "maximum": 0.0,
+  "includeCharacterIds": ["expansion_mod:eyebrow"],
+  "excludeCharacterIds": [],
+  "priority": 0
+}

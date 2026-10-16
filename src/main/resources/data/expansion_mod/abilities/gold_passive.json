@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:time_is_money",
+  "implementationId": "expansion_mod:time_is_money",
+  "nameKey": "ability.expansion_mod.gold.passive.name",
+  "descriptionKey": "ability.expansion_mod.gold.passive.description",
+  "parameters": {
+    "maximumFortune": 10,
+    "fortuneConsumedByUltimate": 4,
+    "criticalRatePerFortune": 0.05,
+    "timedGainIntervalSeconds": 30.0
+  }
+}

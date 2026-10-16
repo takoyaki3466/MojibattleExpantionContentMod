@@ -1,0 +1,13 @@
+{
+  "id": "expansion_mod:tea_style",
+  "implementationId": "expansion_mod:tea_style",
+  "nameKey": "ability.expansion_mod.tea.ultimate.name",
+  "descriptionKey": "ability.expansion_mod.tea.ultimate.description",
+  "pointCost": 100.0,
+  "warningSeconds": 0.0,
+  "parameters": {
+    "effectId": "mojibattle:kana",
+    "effectScale": 10.0,
+    "effectDurationSeconds": 1.2
+  }
+}

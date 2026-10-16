@@ -1,0 +1,17 @@
+{
+  "id": "expansion_mod:make_tea",
+  "implementationId": "expansion_mod:make_tea",
+  "nameKey": "ability.expansion_mod.tea.skill.name",
+  "descriptionKey": "ability.expansion_mod.tea.skill.description",
+  "cooldownSeconds": 7.0,
+  "parameters": {
+    "damage": 34.0,
+    "slowMultiplier": 0.62,
+    "slowDurationSeconds": 4.5,
+    "projectileSpeed": 12.0,
+    "projectileRadius": 0.55,
+    "projectileLifetimeSeconds": 2.5,
+    "projectileTexture": "expansion_mod:textures/tea.png",
+    "effectId": "mojibattle:kana"
+  }
+}

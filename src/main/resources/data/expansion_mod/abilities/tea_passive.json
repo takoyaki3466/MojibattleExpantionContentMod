@@ -1,0 +1,17 @@
+{
+  "id": "expansion_mod:elegant_tea_party",
+  "implementationId": "expansion_mod:elegant_tea_party",
+  "nameKey": "ability.expansion_mod.tea.passive.name",
+  "descriptionKey": "ability.expansion_mod.tea.passive.description",
+  "parameters": {
+    "skillStateDurationSeconds": 3.0,
+    "ultimateStateDurationSeconds": 12.0,
+    "ultimateRefundRatio": 0.5,
+    "attackIntervalMultiplier": 0.58,
+    "projectileCountDelta": 2,
+    "spreadDegrees": 42.0,
+    "damageMultiplier": 0.85,
+    "projectileTexture": "expansion_mod:textures/tea.png",
+    "effectId": "mojibattle:kana"
+  }
+}

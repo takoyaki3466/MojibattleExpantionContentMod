@@ -1,0 +1,17 @@
+{
+  "id": "expansion_mod:tea",
+  "type": "MAIN",
+  "displayGlyph": "茶",
+  "nameKey": "character.expansion_mod.tea.name",
+  "maxHp": 980.0,
+  "baseAttack": 1.0,
+  "moveSpeed": 5.9,
+  "collisionRadius": 0.63,
+  "skillId": "expansion_mod:make_tea",
+  "ultimateId": "expansion_mod:tea_style",
+  "passiveId": "expansion_mod:elegant_tea_party",
+  "glyphTexture": "expansion_mod:textures/tea.png",
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": false
+}

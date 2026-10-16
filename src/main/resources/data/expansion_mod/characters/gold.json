@@ -1,0 +1,17 @@
+{
+  "id": "expansion_mod:gold",
+  "type": "MAIN",
+  "displayGlyph": "金",
+  "nameKey": "character.expansion_mod.gold.name",
+  "maxHp": 920.0,
+  "baseAttack": 1.0,
+  "moveSpeed": 6.0,
+  "collisionRadius": 0.62,
+  "skillId": "expansion_mod:rising_fortune",
+  "ultimateId": "expansion_mod:money_making_explosion",
+  "passiveId": "expansion_mod:time_is_money",
+  "glyphTexture": "expansion_mod:textures/gold.png",
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.7,
+  "criticalEnabled": true
+}

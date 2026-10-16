@@ -1,0 +1,47 @@
+{
+  "id": "expansion_mod:dx",
+  "type": "SUPPORT",
+  "displayGlyph": "dx",
+  "nameKey": "support.expansion_mod.dx.name",
+  "styleKey": "support.expansion_mod.dx.style",
+  "glyphTexture": "expansion_mod:textures/dx.png",
+  "projectileTexture": "expansion_mod:textures/dx.png",
+  "moveSpeed": 9.2,
+  "followDistance": 2.4,
+  "attackRange": 13.5,
+  "attackInterval": 1.45,
+  "baseDamage": 18.0,
+  "projectileSpeed": 16.0,
+  "ultimateChargePerSecond": 4.0,
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": false,
+  "skill": {
+    "id": "expansion_mod:plane_differentiation",
+    "type": "expansion_mod:plane_differentiation",
+    "nameKey": "support.expansion_mod.dx.skill.name",
+    "descriptionKey": "support.expansion_mod.dx.skill.description",
+    "cooldownSeconds": 14.0,
+    "parameters": { "damageMultiplier": 0.5 }
+  },
+  "ultimate": {
+    "id": "expansion_mod:infinite_differentiation",
+    "type": "expansion_mod:infinite_differentiation",
+    "nameKey": "support.expansion_mod.dx.ultimate.name",
+    "descriptionKey": "support.expansion_mod.dx.ultimate.description",
+    "pointCost": 100.0,
+    "parameters": {
+      "damageMultiplier": 0.55,
+      "intervalMultiplier": 0.82,
+      "hitsPerAttack": 3,
+      "projectileTexture": "expansion_mod:textures/dx.png",
+      "effectId": "mojibattle:impact"
+    }
+  },
+  "fieldPassiveIds": [
+    "expansion_mod:differential_move_slow",
+    "expansion_mod:differential_attack_down",
+    "expansion_mod:differential_defense_down",
+    "expansion_mod:differential_integral_haste"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "expansion_mod:expanding_forest_maze",
+  "implementationId": "expansion_mod:expanding_forest_maze",
+  "nameKey": "ability.expansion_mod.tree.passive.name",
+  "descriptionKey": "ability.expansion_mod.tree.passive.description",
+  "parameters": {
+    "treesPerGrove": 2,
+    "grovesPerForest": 3,
+    "forestsPerUniverse": 2,
+    "unrankedMultiplier": 0.75,
+    "treeMultiplier": 1.0,
+    "groveMultiplier": 1.35,
+    "forestMultiplier": 1.75,
+    "universeMultiplier": 2.4
+  }
+}

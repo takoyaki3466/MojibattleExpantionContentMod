@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:differential_defense_down",
+  "type": "incoming_damage_multiplier",
+  "target": "ALL",
+  "magnitude": 1.15,
+  "intervalSeconds": 0.0,
+  "durationSeconds": 0.0,
+  "maximum": 1.15,
+  "includeCharacterIds": [],
+  "excludeCharacterIds": ["integral"],
+  "priority": 0
+}

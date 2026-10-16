@@ -1,0 +1,44 @@
+{
+  "id": "expansion_mod:long",
+  "type": "SUPPORT",
+  "displayGlyph": "長",
+  "nameKey": "support.expansion_mod.long.name",
+  "styleKey": "support.expansion_mod.long.style",
+  "glyphTexture": "expansion_mod:textures/long.png",
+  "projectileTexture": "expansion_mod:textures/long.png",
+  "moveSpeed": 7.5,
+  "followDistance": 2.8,
+  "attackRange": 12.5,
+  "attackInterval": 1.7,
+  "baseDamage": 20.0,
+  "projectileSpeed": 13.0,
+  "ultimateChargePerSecond": 4.0,
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": false,
+  "skill": {
+    "id": "expansion_mod:not_short",
+    "type": "expansion_mod:not_short",
+    "nameKey": "support.expansion_mod.long.skill.name",
+    "descriptionKey": "support.expansion_mod.long.skill.description",
+    "cooldownSeconds": 15.0,
+    "parameters": {
+      "incomingDamageMultiplier": 0.7,
+      "durationSeconds": 8.0,
+      "healRatio": 0.05
+    }
+  },
+  "ultimate": {
+    "id": "expansion_mod:pros_and_cons",
+    "type": "expansion_mod:pros_and_cons",
+    "nameKey": "support.expansion_mod.long.ultimate.name",
+    "descriptionKey": "support.expansion_mod.long.ultimate.description",
+    "pointCost": 100.0,
+    "parameters": {
+      "allyAttackIntervalMultiplier": 0.92,
+      "enemyAttackIntervalMultiplier": 1.08,
+      "maximumStacks": 100
+    }
+  },
+  "fieldPassiveIds": ["expansion_mod:long_long_ago"]
+}

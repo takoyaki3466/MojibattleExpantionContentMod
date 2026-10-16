@@ -1,0 +1,14 @@
+{
+  "id": "expansion_mod:rising_fortune",
+  "implementationId": "expansion_mod:rising_fortune",
+  "nameKey": "ability.expansion_mod.gold.skill.name",
+  "descriptionKey": "ability.expansion_mod.gold.skill.description",
+  "cooldownSeconds": 7.0,
+  "parameters": {
+    "damage": 38.0,
+    "dropDelaySeconds": 0.55,
+    "effectId": "mojibattle:stock",
+    "goldTexture": "expansion_mod:textures/gold.png",
+    "effectScale": 5.5
+  }
+}

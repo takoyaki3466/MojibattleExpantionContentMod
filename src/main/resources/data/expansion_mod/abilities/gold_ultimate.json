@@ -1,0 +1,14 @@
+{
+  "id": "expansion_mod:money_making_explosion",
+  "implementationId": "expansion_mod:money_making_explosion",
+  "nameKey": "ability.expansion_mod.gold.ultimate.name",
+  "descriptionKey": "ability.expansion_mod.gold.ultimate.description",
+  "pointCost": 100.0,
+  "warningSeconds": 0.0,
+  "parameters": {
+    "baseDamage": 165.0,
+    "effectId": "mojibattle:critical",
+    "effectScale": 9.0,
+    "effectDurationSeconds": 0.9
+  }
+}

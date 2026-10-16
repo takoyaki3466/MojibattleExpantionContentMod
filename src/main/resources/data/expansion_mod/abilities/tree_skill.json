@@ -1,0 +1,14 @@
+{
+  "id": "expansion_mod:return_to_forest",
+  "implementationId": "expansion_mod:return_to_forest",
+  "nameKey": "ability.expansion_mod.tree.skill.name",
+  "descriptionKey": "ability.expansion_mod.tree.skill.description",
+  "cooldownSeconds": 3.0,
+  "parameters": {
+    "damage": 28.0,
+    "knockbackDistance": 1.4,
+    "impactEffectId": "mojibattle:wind",
+    "effectScale": 4.5,
+    "effectDurationSeconds": 0.45
+  }
+}

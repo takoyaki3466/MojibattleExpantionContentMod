@@ -1,0 +1,16 @@
+{
+  "id": "expansion_mod:forest_universe",
+  "implementationId": "expansion_mod:forest_universe",
+  "nameKey": "ability.expansion_mod.tree.ultimate.name",
+  "descriptionKey": "ability.expansion_mod.tree.ultimate.description",
+  "pointCost": 100.0,
+  "warningSeconds": 0.0,
+  "parameters": {
+    "baseDamage": 100.0,
+    "activationEffectId": "mojibattle:family",
+    "impactEffectId": "mojibattle:impact",
+    "activationEffectScale": 8.0,
+    "impactEffectScale": 6.0,
+    "effectDurationSeconds": 0.9
+  }
+}

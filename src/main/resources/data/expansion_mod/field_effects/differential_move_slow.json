@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:differential_move_slow",
+  "type": "move_multiplier",
+  "target": "ALL",
+  "magnitude": 0.85,
+  "intervalSeconds": 0.0,
+  "durationSeconds": 0.0,
+  "maximum": 0.85,
+  "includeCharacterIds": [],
+  "excludeCharacterIds": ["integral"],
+  "priority": 0
+}

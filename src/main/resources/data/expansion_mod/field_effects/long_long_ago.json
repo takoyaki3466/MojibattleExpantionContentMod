@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:long_long_ago",
+  "type": "move_multiplier",
+  "target": "ALL",
+  "magnitude": 0.88,
+  "intervalSeconds": 0.0,
+  "durationSeconds": 0.0,
+  "maximum": 0.88,
+  "includeCharacterIds": [],
+  "excludeCharacterIds": ["short"],
+  "priority": 0
+}

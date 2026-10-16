@@ -1,0 +1,12 @@
+{
+  "id": "expansion_mod:differential_integral_haste",
+  "type": "normal_attack_interval",
+  "target": "MAIN",
+  "magnitude": 0.75,
+  "intervalSeconds": 0.0,
+  "durationSeconds": 0.0,
+  "maximum": 0.75,
+  "includeCharacterIds": ["integral"],
+  "excludeCharacterIds": [],
+  "priority": 100
+}

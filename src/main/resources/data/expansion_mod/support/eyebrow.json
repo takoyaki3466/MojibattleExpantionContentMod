@@ -1,0 +1,60 @@
+{
+  "id": "expansion_mod:eyebrow",
+  "type": "SUPPORT",
+  "displayGlyph": "眉",
+  "nameKey": "support.expansion_mod.eyebrow.name",
+  "styleKey": "support.expansion_mod.eyebrow.style",
+  "glyphTexture": "expansion_mod:textures/eyebrow.png",
+  "projectileTexture": "expansion_mod:textures/eyebrow.png",
+  "moveSpeed": 9.5,
+  "followDistance": 2.2,
+  "attackRange": 13.0,
+  "attackInterval": 1.3,
+  "baseDamage": 17.0,
+  "projectileSpeed": 16.5,
+  "ultimateChargePerSecond": 4.1,
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": false,
+  "supportPassiveImplementationId": "expansion_mod:eyebrow_raise_face",
+  "parameters": { "maximumLevel": 200 },
+  "skill": {
+    "id": "expansion_mod:eyebrow_rise",
+    "type": "expansion_mod:eyebrow_rise",
+    "nameKey": "support.expansion_mod.eyebrow.skill.name",
+    "descriptionKey": "support.expansion_mod.eyebrow.skill.description",
+    "cooldownSeconds": 12.0,
+    "parameters": {
+      "levelGain": 10,
+      "maximumLevel": 200,
+      "intervalMultiplier": 0.65,
+      "durationSeconds": 6.0,
+      "damage": 42.0,
+      "projectileSpeed": 15.0,
+      "projectileRadius": 0.5,
+      "projectileLifetimeSeconds": 2.5,
+      "projectileTexture": "expansion_mod:textures/eyebrow.png",
+      "effectId": "mojibattle:critical"
+    }
+  },
+  "ultimate": {
+    "id": "expansion_mod:skeptical_volley",
+    "type": "expansion_mod:skeptical_volley",
+    "nameKey": "support.expansion_mod.eyebrow.ultimate.name",
+    "descriptionKey": "support.expansion_mod.eyebrow.ultimate.description",
+    "pointCost": 100.0,
+    "parameters": {
+      "maximumLevel": 200,
+      "levelsPerProjectile": 10,
+      "maximumProjectiles": 20,
+      "damagePerProjectile": 22.0,
+      "projectileSpeed": 16.0,
+      "projectileRadius": 0.52,
+      "projectileLifetimeSeconds": 3.0,
+      "spreadDegrees": 38.0,
+      "projectileTexture": "expansion_mod:textures/skeptical.png",
+      "effectId": "mojibattle:critical"
+    }
+  },
+  "fieldPassiveIds": ["expansion_mod:eyebrow_passive_marker"]
+}
