@@ -1,0 +1,14 @@
+{
+  "id": "expansion_mod:converging_summation",
+  "implementationId": "expansion_mod:converging_summation",
+  "nameKey": "ability.expansion_mod.sigma.ultimate.name",
+  "descriptionKey": "ability.expansion_mod.sigma.ultimate.description",
+  "pointCost": 100.0,
+  "warningSeconds": 0.0,
+  "parameters": {
+    "damagePerStack": 60.0,
+    "effectId": "mojibattle:critical",
+    "effectScale": 10.0,
+    "effectDurationSeconds": 1.0
+  }
+}

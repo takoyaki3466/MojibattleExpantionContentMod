@@ -63,5 +63,14 @@
   "support.expansion_mod.eyebrow.ultimate.description": "眉レベル10ごとに🤨を1発、最大20発放つ。発動後、眉レベルは半分になる。",
   "state.expansion_mod.eyebrow.level": "眉レベル {0}/{1}",
   "field.expansion_mod:eyebrow_passive_marker": "ﾏﾕｦｱｹﾞﾀｶｵ",
-  "field.description.expansion_mod:eyebrow_passive_marker": "自身または敵の通常攻撃1回ごとに眉レベルを1獲得する（最大200）。"
+  "field.description.expansion_mod:eyebrow_passive_marker": "自身または敵の通常攻撃1回ごとに眉レベルを1獲得する（最大200）。",
+
+  "character.expansion_mod.sigma.name": "Σ",
+  "ability.expansion_mod.sigma.skill.name": "累算",
+  "ability.expansion_mod.sigma.skill.description": "空から敵へΣ式を落として攻撃し、累算を1層獲得する。",
+  "ability.expansion_mod.sigma.ultimate.name": "収束する累算",
+  "ability.expansion_mod.sigma.ultimate.description": "累算をすべて消費し、1層につき60ダメージを与える。3層以上で防御を無視し、5層以上で確定会心になる。",
+  "ability.expansion_mod.sigma.passive.name": "終わらない計算",
+  "ability.expansion_mod.sigma.passive.description": "最大HPが50%増加し、スキルのクールタイムが短縮される代わりに、スキルダメージ係数が大きく低下する。",
+  "state.expansion_mod.sigma.summation": "累算 {0}層"
 }

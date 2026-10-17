@@ -16,6 +16,9 @@ import com.takoyaki3466.mojibattle.dxsupport.PlaneDifferentiationSkill;
 import com.takoyaki3466.mojibattle.eyebrow.EyebrowRaiseFacePassive;
 import com.takoyaki3466.mojibattle.eyebrow.EyebrowRiseSkill;
 import com.takoyaki3466.mojibattle.eyebrow.SkepticalVolleyUltimate;
+import com.takoyaki3466.mojibattle.sigma.AccumulationSkill;
+import com.takoyaki3466.mojibattle.sigma.ConvergingSummationUltimate;
+import com.takoyaki3466.mojibattle.sigma.EndlessCalculationPassive;
 import jp.takoa.mojibattle.content.CharacterDataRegistration;
 import jp.takoa.mojibattle.content.FieldEffectDataRegistration;
 import jp.takoa.mojibattle.content.SupportCharacterDataRegistration;
@@ -42,6 +45,9 @@ public final class ExpansionMod implements GameMod {
     private static final String EYEBROW_SKILL_IMPLEMENTATION = MOD_ID + ":eyebrow_rise";
     private static final String EYEBROW_ULTIMATE_IMPLEMENTATION = MOD_ID + ":skeptical_volley";
     private static final String EYEBROW_PASSIVE_IMPLEMENTATION = MOD_ID + ":eyebrow_raise_face";
+    private static final String SIGMA_SKILL_IMPLEMENTATION = MOD_ID + ":accumulation";
+    private static final String SIGMA_ULTIMATE_IMPLEMENTATION = MOD_ID + ":converging_summation";
+    private static final String SIGMA_PASSIVE_IMPLEMENTATION = MOD_ID + ":endless_calculation";
 
     @Override
     public String id() {
@@ -56,9 +62,11 @@ public final class ExpansionMod implements GameMod {
         registerLongAbilities(context);
         registerDxAbilities(context);
         registerEyebrowAbilities(context);
+        registerSigmaAbilities(context);
         registerMainCharacter(context, "tree");
         registerMainCharacter(context, "gold");
         registerMainCharacter(context, "tea");
+        registerMainCharacter(context, "sigma");
         context.content().registerFieldEffect(new FieldEffectDataRegistration(resource("field_effects/long_long_ago.json")));
         registerFieldEffect(context, "differential_move_slow");
         registerFieldEffect(context, "differential_attack_down");
@@ -107,6 +115,15 @@ public final class ExpansionMod implements GameMod {
                 parameters -> new SkepticalVolleyUltimate(SkepticalVolleyUltimate.Config.from(parameters)));
         context.abilities().registerSupportPassiveImplementation(EYEBROW_PASSIVE_IMPLEMENTATION,
                 parameters -> new EyebrowRaiseFacePassive(EyebrowRaiseFacePassive.Config.from(parameters)));
+    }
+
+    private static void registerSigmaAbilities(ModContext context) {
+        context.abilities().registerSkillImplementation(SIGMA_SKILL_IMPLEMENTATION,
+                parameters -> new AccumulationSkill(AccumulationSkill.Config.from(parameters)));
+        context.abilities().registerUltimateImplementation(SIGMA_ULTIMATE_IMPLEMENTATION,
+                parameters -> new ConvergingSummationUltimate(ConvergingSummationUltimate.Config.from(parameters)));
+        context.abilities().registerPassiveImplementation(SIGMA_PASSIVE_IMPLEMENTATION,
+                parameters -> new EndlessCalculationPassive(EndlessCalculationPassive.Config.from(parameters)));
     }
 
     private static void registerFieldEffect(ModContext context, String id) {

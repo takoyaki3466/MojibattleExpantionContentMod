@@ -1,0 +1,14 @@
+{
+  "id": "expansion_mod:accumulation",
+  "implementationId": "expansion_mod:accumulation",
+  "nameKey": "ability.expansion_mod.sigma.skill.name",
+  "descriptionKey": "ability.expansion_mod.sigma.skill.description",
+  "cooldownSeconds": 4.0,
+  "parameters": {
+    "damage": 12.0,
+    "dropDelaySeconds": 0.5,
+    "effectId": "mojibattle:impact",
+    "sigmaTexture": "expansion_mod:textures/sigma.png",
+    "effectScale": 5.5
+  }
+}

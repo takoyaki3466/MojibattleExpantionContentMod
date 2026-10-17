@@ -1,0 +1,10 @@
+{
+  "id": "expansion_mod:endless_calculation",
+  "implementationId": "expansion_mod:endless_calculation",
+  "nameKey": "ability.expansion_mod.sigma.passive.name",
+  "descriptionKey": "ability.expansion_mod.sigma.passive.description",
+  "parameters": {
+    "defenseIgnoreMinimumStacks": 3,
+    "guaranteedCriticalMinimumStacks": 5
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "expansion_mod:sigma",
+  "type": "MAIN",
+  "displayGlyph": "Σ",
+  "nameKey": "character.expansion_mod.sigma.name",
+  "maxHp": 1500.0,
+  "baseAttack": 1.0,
+  "moveSpeed": 5.6,
+  "collisionRadius": 0.66,
+  "skillId": "expansion_mod:accumulation",
+  "ultimateId": "expansion_mod:converging_summation",
+  "passiveId": "expansion_mod:endless_calculation",
+  "glyphTexture": "expansion_mod:textures/sigma.png",
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": true
+}
