@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.takoyaki3466"
-version = "1.3.0"
+version = "1.3.2"
 
 repositories {
     mavenLocal()
@@ -15,5 +15,5 @@ java {
 }
 
 dependencies {
-    compileOnly("jp.takoa.mojibattle:mojibattle-api:0.8.0")
+    compileOnly("jp.takoa.mojibattle:mojibattle-api:0.8.1")
 }

@@ -25,8 +25,17 @@ public final class ForestUniverseUltimate implements UltimateRuntime {
                 context.user(), config.activationEffect(), config.activationEffectScale(), config.effectDurationSeconds());
         for (var enemy : enemies) {
             context.actions().damage(context.user(), enemy, config.baseDamage(), DamageType.ULTIMATE);
-            context.actions().emitEffect(
-                    enemy, config.impactEffect(), config.impactEffectScale(), config.effectDurationSeconds());
+        }
+
+        // BattlefieldView returns unified views for mains, supports and summons. MojiBattle 0.8.1
+        // can damage all of those views, but its emitEffect adapter still accepts only the legacy
+        // main-character view supplied as AbilityActivationContext.target(). Using a unified enemy
+        // view here therefore crashes as soon as this ultimate is activated. Keep the all-enemy
+        // damage and anchor the representative impact effect to the safe primary target instead.
+        var primaryTarget = context.target();
+        if (primaryTarget != null && primaryTarget.alive()) {
+            context.actions().emitEffect(primaryTarget, config.impactEffect(),
+                    config.impactEffectScale(), config.effectDurationSeconds());
         }
         return true;
     }

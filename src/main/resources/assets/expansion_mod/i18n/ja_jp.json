@@ -72,5 +72,15 @@
   "ability.expansion_mod.sigma.ultimate.description": "累算をすべて消費し、1層につき60ダメージを与える。3層以上で防御を無視し、5層以上で確定会心になる。",
   "ability.expansion_mod.sigma.passive.name": "終わらない計算",
   "ability.expansion_mod.sigma.passive.description": "最大HPが50%増加し、スキルのクールタイムが短縮される代わりに、スキルダメージ係数が大きく低下する。",
-  "state.expansion_mod.sigma.summation": "累算 {0}層"
+  "state.expansion_mod.sigma.summation": "累算 {0}層",
+
+  "support.expansion_mod.group.name": "㌠",
+  "support.expansion_mod.group.style": "仲間と分裂し、決闘で敵を孤立させる",
+  "support.expansion_mod.group.skill.name": "決闘",
+  "support.expansion_mod.group.skill.description": "最もHPの多い敵と8秒間決闘する。決闘参加者は被ダメージが50%増加し、決闘外からのダメージを80%軽減する。分裂中は5体全員が参加する。",
+  "support.expansion_mod.group.ultimate.name": "一致団結",
+  "support.expansion_mod.group.ultimate.description": "12秒間「サ」「ン」「チ」「ー」「ム」の5体に分裂し、同じ敵を共同攻撃する。終了時に㌠へ再合体する。",
+  "field.expansion_mod:letter_group_marker": "文字㌠",
+  "field.description.expansion_mod:letter_group_marker": "メイン・補助・召喚を含む戦場の生存キャラクター数に応じて㌠の火力が上昇する。",
+  "state.expansion_mod.group.battlefield_power": "戦場人数 {0}・火力 ×{1}"
 }

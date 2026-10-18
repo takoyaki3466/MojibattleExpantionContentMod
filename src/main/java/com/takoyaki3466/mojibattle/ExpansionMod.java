@@ -19,6 +19,9 @@ import com.takoyaki3466.mojibattle.eyebrow.SkepticalVolleyUltimate;
 import com.takoyaki3466.mojibattle.sigma.AccumulationSkill;
 import com.takoyaki3466.mojibattle.sigma.ConvergingSummationUltimate;
 import com.takoyaki3466.mojibattle.sigma.EndlessCalculationPassive;
+import com.takoyaki3466.mojibattle.groupsupport.DuelSkill;
+import com.takoyaki3466.mojibattle.groupsupport.LetterGroupPassive;
+import com.takoyaki3466.mojibattle.groupsupport.UnitedAsOneUltimate;
 import jp.takoa.mojibattle.content.CharacterDataRegistration;
 import jp.takoa.mojibattle.content.FieldEffectDataRegistration;
 import jp.takoa.mojibattle.content.SupportCharacterDataRegistration;
@@ -48,6 +51,9 @@ public final class ExpansionMod implements GameMod {
     private static final String SIGMA_SKILL_IMPLEMENTATION = MOD_ID + ":accumulation";
     private static final String SIGMA_ULTIMATE_IMPLEMENTATION = MOD_ID + ":converging_summation";
     private static final String SIGMA_PASSIVE_IMPLEMENTATION = MOD_ID + ":endless_calculation";
+    private static final String GROUP_SKILL_IMPLEMENTATION = MOD_ID + ":duel";
+    private static final String GROUP_ULTIMATE_IMPLEMENTATION = MOD_ID + ":united_as_one";
+    private static final String GROUP_PASSIVE_IMPLEMENTATION = MOD_ID + ":letter_group";
 
     @Override
     public String id() {
@@ -63,6 +69,7 @@ public final class ExpansionMod implements GameMod {
         registerDxAbilities(context);
         registerEyebrowAbilities(context);
         registerSigmaAbilities(context);
+        registerGroupAbilities(context);
         registerMainCharacter(context, "tree");
         registerMainCharacter(context, "gold");
         registerMainCharacter(context, "tea");
@@ -73,9 +80,11 @@ public final class ExpansionMod implements GameMod {
         registerFieldEffect(context, "differential_defense_down");
         registerFieldEffect(context, "differential_integral_haste");
         registerFieldEffect(context, "eyebrow_passive_marker");
+        registerFieldEffect(context, "letter_group_marker");
         context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/long.json"), "i18n"));
         context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/dx.json"), "i18n"));
         context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/eyebrow.json"), "i18n"));
+        context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/group.json"), "i18n"));
     }
 
     private static void registerTreeAbilities(ModContext context) {
@@ -124,6 +133,15 @@ public final class ExpansionMod implements GameMod {
                 parameters -> new ConvergingSummationUltimate(ConvergingSummationUltimate.Config.from(parameters)));
         context.abilities().registerPassiveImplementation(SIGMA_PASSIVE_IMPLEMENTATION,
                 parameters -> new EndlessCalculationPassive(EndlessCalculationPassive.Config.from(parameters)));
+    }
+
+    private static void registerGroupAbilities(ModContext context) {
+        context.abilities().registerSupportSkillImplementation(GROUP_SKILL_IMPLEMENTATION,
+                parameters -> new DuelSkill(DuelSkill.Config.from(parameters)));
+        context.abilities().registerSupportUltimateImplementation(GROUP_ULTIMATE_IMPLEMENTATION,
+                parameters -> new UnitedAsOneUltimate(UnitedAsOneUltimate.Config.from(parameters)));
+        context.abilities().registerSupportPassiveImplementation(GROUP_PASSIVE_IMPLEMENTATION,
+                parameters -> new LetterGroupPassive(LetterGroupPassive.Config.from(parameters)));
     }
 
     private static void registerFieldEffect(ModContext context, String id) {

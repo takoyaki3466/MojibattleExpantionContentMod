@@ -1,0 +1,60 @@
+{
+  "id": "expansion_mod:group",
+  "type": "SUPPORT",
+  "displayGlyph": "㌠",
+  "nameKey": "support.expansion_mod.group.name",
+  "styleKey": "support.expansion_mod.group.style",
+  "glyphTexture": "expansion_mod:textures/group.png",
+  "projectileTexture": "expansion_mod:textures/group.png",
+  "moveSpeed": 8.2,
+  "followDistance": 2.5,
+  "attackRange": 13.5,
+  "attackInterval": 1.5,
+  "baseDamage": 22.0,
+  "projectileSpeed": 15.0,
+  "maxHp": 800.0,
+  "defense": 25.0,
+  "ultimateChargePerSecond": 4.0,
+  "criticalRate": 0.0,
+  "criticalDamageMultiplier": 1.5,
+  "criticalEnabled": false,
+  "supportPassiveImplementationId": "expansion_mod:letter_group",
+  "parameters": {
+    "priority": 100,
+    "baseMultiplier": 0.9,
+    "multiplierPerCombatant": 0.05
+  },
+  "skill": {
+    "id": "expansion_mod:duel",
+    "type": "expansion_mod:duel",
+    "nameKey": "support.expansion_mod.group.skill.name",
+    "descriptionKey": "support.expansion_mod.group.skill.description",
+    "cooldownSeconds": 14.0,
+    "parameters": {
+      "durationSeconds": 8.0,
+      "participantDamageTakenMultiplier": 1.5,
+      "outsideAttackerDamageMultiplier": 0.2
+    }
+  },
+  "ultimate": {
+    "id": "expansion_mod:united_as_one",
+    "type": "expansion_mod:united_as_one",
+    "nameKey": "support.expansion_mod.group.ultimate.name",
+    "descriptionKey": "support.expansion_mod.group.ultimate.description",
+    "pointCost": 100.0,
+    "parameters": {
+      "durationSeconds": 12.0,
+      "memberBaseDamage": 11.0,
+      "memberAttackIntervalSeconds": 1.1,
+      "memberMoveSpeed": 9.0,
+      "countBaseMultiplier": 0.9,
+      "multiplierPerCombatant": 0.05,
+      "saTexture": "expansion_mod:textures/group_sa.png",
+      "nTexture": "expansion_mod:textures/group_n.png",
+      "chiTexture": "expansion_mod:textures/group_chi.png",
+      "longMarkTexture": "expansion_mod:textures/group_long_mark.png",
+      "muTexture": "expansion_mod:textures/group_mu.png"
+    }
+  },
+  "fieldPassiveIds": ["expansion_mod:letter_group_marker"]
+}
