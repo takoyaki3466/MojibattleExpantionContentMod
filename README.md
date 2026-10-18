@@ -43,6 +43,183 @@ MojiBattleEXへメインキャラクターと補助キャラクターを追加�
 | `src/main/resources/assets/expansion_mod/i18n/ja_jp.json` | 日本語名、説明文、状態表示 |
 | `src/main/resources/assets/expansion_mod/textures/` | キャラクターと攻撃に使用する透過PNG |
 
+## 登録方法
+
+MojiBattle API 0.8.1には、登録先によって次の2つの方法があります。
+
+| 方法 | 使用場所 | 登録できるもの |
+| --- | --- | --- |
+| `context`へ直接登録 | 外部MOD（このプロジェクトはこちら） | メイン／補助キャラクターのJSONと、メイン／補助のスキル・必殺技・パッシブRuntime |
+| `DeferredRegister` | ゲーム本体または、ホストが公開した`RegistryKey<T>`を使用するモジュール | 対応する型付きRegistryの要素 |
+
+外部MODでは、公開APIだけで完結する`context.content()`と`context.abilities()`を使用してください。`DeferredRegister`は任意の登録を遅延実行する仕組みではなく、ホスト側に同じ`RegistryKey<T>`のRegistryが作成されている場合だけ解決されます。また、0.8.1にはキャラクターデータ用の公開`RegistryKey`がないため、メイン／補助キャラクター自体はどちらの構成でも`context.content()`へ登録します。
+
+### 方法1：`context`へ直接登録する
+
+このプロジェクトで使用している、外部MOD向けの推奨方法です。次の例には、メインキャラクター「木」と補助キャラクター「眉」、および両者のスキル・必殺技・パッシブをすべて含めています。
+
+```java
+import com.takoyaki3466.mojibattle.eyebrow.EyebrowRaiseFacePassive;
+import com.takoyaki3466.mojibattle.eyebrow.EyebrowRiseSkill;
+import com.takoyaki3466.mojibattle.eyebrow.SkepticalVolleyUltimate;
+import com.takoyaki3466.mojibattle.tree.ExpandingForestMazePassive;
+import com.takoyaki3466.mojibattle.tree.ForestUniverseUltimate;
+import com.takoyaki3466.mojibattle.tree.ReturnToForestSkill;
+import jp.takoa.mojibattle.content.CharacterDataRegistration;
+import jp.takoa.mojibattle.content.SupportCharacterDataRegistration;
+import jp.takoa.mojibattle.mod.GameMod;
+import jp.takoa.mojibattle.mod.ModContext;
+import jp.takoa.mojibattle.resource.ResourceId;
+
+public final class ExampleMod implements GameMod {
+    private static final String MOD_ID = "expansion_mod";
+
+    @Override
+    public String id() {
+        return MOD_ID;
+    }
+
+    @Override
+    public void register(ModContext context) {
+        // メインキャラクターのスキル・必殺技・パッシブ
+        context.abilities().registerSkillImplementation(
+                MOD_ID + ":return_to_forest",
+                parameters -> new ReturnToForestSkill(
+                        ReturnToForestSkill.Config.from(parameters)));
+        context.abilities().registerUltimateImplementation(
+                MOD_ID + ":forest_universe",
+                parameters -> new ForestUniverseUltimate(
+                        ForestUniverseUltimate.Config.from(parameters)));
+        context.abilities().registerPassiveImplementation(
+                MOD_ID + ":expanding_forest_maze",
+                parameters -> new ExpandingForestMazePassive(
+                        ExpandingForestMazePassive.Config.from(parameters)));
+
+        // 補助キャラクターのスキル・必殺技・パッシブ
+        context.abilities().registerSupportSkillImplementation(
+                MOD_ID + ":eyebrow_rise",
+                parameters -> new EyebrowRiseSkill(
+                        EyebrowRiseSkill.Config.from(parameters)));
+        context.abilities().registerSupportUltimateImplementation(
+                MOD_ID + ":skeptical_volley",
+                parameters -> new SkepticalVolleyUltimate(
+                        SkepticalVolleyUltimate.Config.from(parameters)));
+        context.abilities().registerSupportPassiveImplementation(
+                MOD_ID + ":eyebrow_raise_face",
+                parameters -> new EyebrowRaiseFacePassive(
+                        EyebrowRaiseFacePassive.Config.from(parameters)));
+
+        // メインキャラクターと3つのAbility JSONを一括登録
+        context.content().registerCharacter(new CharacterDataRegistration(
+                resource("characters/tree.json"),
+                resource("abilities/tree_skill.json"),
+                resource("abilities/tree_ultimate.json"),
+                resource("abilities/tree_passive.json"),
+                "i18n"));
+
+        // 補助キャラクターはスキル・必殺技・パッシブを1つのJSONに記述する
+        context.content().registerSupportCharacter(
+                new SupportCharacterDataRegistration(
+                        resource("support/eyebrow.json"), "i18n"));
+    }
+
+    private static ResourceId resource(String path) {
+        return new ResourceId(MOD_ID, path);
+    }
+}
+```
+
+登録IDはJSON側の参照と一致させます。
+
+- メインのスキル・必殺技・パッシブ：各Ability JSONの`implementationId`
+- 補助のスキル・必殺技：補助キャラクターJSON内の`skill.type`と`ultimate.type`
+- 補助のパッシブ：補助キャラクターJSON内の`supportPassiveImplementationId`
+
+Factoryへ渡される`parameters`は、対応するJSONの`parameters`です。Runtimeはキャラクター個体ごとにFactoryから生成されるため、戦闘中に変化する値はstaticフィールドではなくRuntimeインスタンスへ保持します。
+
+### 方法2：`DeferredRegister`を使用する
+
+`DeferredRegister<T>`は、登録内容の宣言とRegistryへの確定を分離します。`register`でFactoryを宣言し、`GameMod#register`で`context.registrationBus()`へ一度だけ`attach`すると、対応する`RegisterEvent<T>`でまとめて登録されます。
+
+次はMojiBattleEX本体の組み込みコンテンツ側で使う構成例です。メインのスキル・必殺技・パッシブ、補助のスキル・必殺技・パッシブを、それぞれ対応するRegistryへ宣言しています。
+
+```java
+// ゲーム本体側の型を使用する例。これらの型はmojibattle-api単体には含まれない。
+import jp.takoa.mojibattle.registry.BuiltInRegistries;
+import jp.takoa.mojibattle.registry.DeferredRegister;
+import jp.takoa.mojibattle.registry.PassiveImplementation;
+import jp.takoa.mojibattle.registry.RegistryHandle;
+import jp.takoa.mojibattle.registry.SkillImplementation;
+import jp.takoa.mojibattle.registry.SupportAbilityImplementation;
+import jp.takoa.mojibattle.registry.SupportPassiveImplementation;
+import jp.takoa.mojibattle.registry.UltimateImplementation;
+
+public final class AbilityRegistryInit {
+    public static final DeferredRegister<SkillImplementation> MAIN_SKILLS =
+            DeferredRegister.create(
+                    BuiltInRegistries.SKILL_IMPLEMENTATIONS, "examplemod");
+    public static final DeferredRegister<UltimateImplementation> MAIN_ULTIMATES =
+            DeferredRegister.create(
+                    BuiltInRegistries.ULTIMATE_IMPLEMENTATIONS, "examplemod");
+    public static final DeferredRegister<PassiveImplementation> MAIN_PASSIVES =
+            DeferredRegister.create(
+                    BuiltInRegistries.PASSIVE_IMPLEMENTATIONS, "examplemod");
+    public static final DeferredRegister<SupportAbilityImplementation> SUPPORT_ABILITIES =
+            DeferredRegister.create(
+                    BuiltInRegistries.SUPPORT_ABILITY_IMPLEMENTATIONS, "examplemod");
+    public static final DeferredRegister<SupportPassiveImplementation> SUPPORT_PASSIVES =
+            DeferredRegister.create(
+                    BuiltInRegistries.SUPPORT_PASSIVE_IMPLEMENTATIONS, "examplemod");
+
+    // 各Supplierは、ID、Factory、validatorなどを持つ対応Implementationを返す。
+    public static final RegistryHandle<SkillImplementation> MAIN_SKILL =
+            MAIN_SKILLS.register("main_skill", MainImplementations::skill);
+    public static final RegistryHandle<UltimateImplementation> MAIN_ULTIMATE =
+            MAIN_ULTIMATES.register("main_ultimate", MainImplementations::ultimate);
+    public static final RegistryHandle<PassiveImplementation> MAIN_PASSIVE =
+            MAIN_PASSIVES.register("main_passive", MainImplementations::passive);
+
+    // 補助スキルと補助必殺技は同じSupportAbilityImplementation Registryを使う。
+    public static final RegistryHandle<SupportAbilityImplementation> SUPPORT_SKILL =
+            SUPPORT_ABILITIES.register("support_skill", SupportImplementations::skill);
+    public static final RegistryHandle<SupportAbilityImplementation> SUPPORT_ULTIMATE =
+            SUPPORT_ABILITIES.register("support_ultimate", SupportImplementations::ultimate);
+    public static final RegistryHandle<SupportPassiveImplementation> SUPPORT_PASSIVE =
+            SUPPORT_PASSIVES.register("support_passive", SupportImplementations::passive);
+
+    private AbilityRegistryInit() {
+    }
+}
+```
+
+`MainImplementations`と`SupportImplementations`は説明用のFactoryクラス名です。実際には各Supplierが、そのRegistryの要素型と一致する実装オブジェクトを返すようにします。宣言した5個の`DeferredRegister`はエントリーポイントで接続します。キャラクターデータは公開Registryの対象ではないため、同じ`register`内で`context.content()`へ直接登録します。
+
+```java
+@Override
+public void register(ModContext context) {
+    AbilityRegistryInit.MAIN_SKILLS.attach(context.registrationBus());
+    AbilityRegistryInit.MAIN_ULTIMATES.attach(context.registrationBus());
+    AbilityRegistryInit.MAIN_PASSIVES.attach(context.registrationBus());
+    AbilityRegistryInit.SUPPORT_ABILITIES.attach(context.registrationBus());
+    AbilityRegistryInit.SUPPORT_PASSIVES.attach(context.registrationBus());
+
+    // メインキャラクター
+    context.content().registerCharacter(new CharacterDataRegistration(
+            resource("characters/example.json"),
+            resource("abilities/example_skill.json"),
+            resource("abilities/example_ultimate.json"),
+            resource("abilities/example_passive.json"),
+            "i18n"));
+
+    // 補助キャラクター（スキル・必殺技・パッシブの設定もこのJSONに含む）
+    context.content().registerSupportCharacter(
+            new SupportCharacterDataRegistration(
+                    resource("support/example_support.json"), "i18n"));
+}
+```
+
+`RegistryHandle#get()`は登録イベントが完了するまで呼び出せません。また、`attach`後に同じ`DeferredRegister`へ項目を追加したり、同じインスタンスを2回`attach`したりすると例外になります。
+
 新しいメインキャラクターを追加する場合は、次の順序で実装します。
 
 1. `SkillRuntime`、`UltimateRuntime`、必要に応じて`PassiveRuntime`を実装する。
