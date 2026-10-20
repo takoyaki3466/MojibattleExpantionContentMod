@@ -1,6 +1,6 @@
 package com.takoyaki3466.mojibattle.eyebrow;
 
-import jp.takoa.mojibattle.ability.SupportStateStore;
+import jp.takoa.mojibattle.ability.support.SupportStateStore;
 
 final class EyebrowState {
     private static final String LEVEL_KEY = "eyebrowLevel";

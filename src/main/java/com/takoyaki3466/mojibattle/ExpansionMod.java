@@ -1,158 +1,37 @@
 package com.takoyaki3466.mojibattle;
 
-import com.takoyaki3466.mojibattle.tree.ExpandingForestMazePassive;
-import com.takoyaki3466.mojibattle.tree.ForestUniverseUltimate;
-import com.takoyaki3466.mojibattle.tree.ReturnToForestSkill;
-import com.takoyaki3466.mojibattle.gold.MoneyMakingExplosionUltimate;
-import com.takoyaki3466.mojibattle.gold.RisingFortuneSkill;
-import com.takoyaki3466.mojibattle.gold.TimeIsMoneyPassive;
-import com.takoyaki3466.mojibattle.longsupport.NotShortSkill;
-import com.takoyaki3466.mojibattle.longsupport.ProsAndConsUltimate;
-import com.takoyaki3466.mojibattle.tea.ElegantTeaPartyPassive;
-import com.takoyaki3466.mojibattle.tea.MakeTeaSkill;
-import com.takoyaki3466.mojibattle.tea.TeaStyleUltimate;
-import com.takoyaki3466.mojibattle.dxsupport.InfiniteDifferentiationUltimate;
-import com.takoyaki3466.mojibattle.dxsupport.PlaneDifferentiationSkill;
-import com.takoyaki3466.mojibattle.eyebrow.EyebrowRaiseFacePassive;
-import com.takoyaki3466.mojibattle.eyebrow.EyebrowRiseSkill;
-import com.takoyaki3466.mojibattle.eyebrow.SkepticalVolleyUltimate;
-import com.takoyaki3466.mojibattle.sigma.AccumulationSkill;
-import com.takoyaki3466.mojibattle.sigma.ConvergingSummationUltimate;
-import com.takoyaki3466.mojibattle.sigma.EndlessCalculationPassive;
-import com.takoyaki3466.mojibattle.groupsupport.DuelSkill;
-import com.takoyaki3466.mojibattle.groupsupport.LetterGroupPassive;
-import com.takoyaki3466.mojibattle.groupsupport.UnitedAsOneUltimate;
-import jp.takoa.mojibattle.content.CharacterDataRegistration;
-import jp.takoa.mojibattle.content.FieldEffectDataRegistration;
-import jp.takoa.mojibattle.content.SupportCharacterDataRegistration;
+import com.takoyaki3466.mojibattle.init.*;
+import jp.takoa.mojibattle.event.RegistrationBus;
 import jp.takoa.mojibattle.mod.GameMod;
 import jp.takoa.mojibattle.mod.ModContext;
+import jp.takoa.mojibattle.mod.ModEntry;
 import jp.takoa.mojibattle.resource.ResourceId;
 
+
+@ModEntry(ExpansionMod.MOD_ID)
 public final class ExpansionMod implements GameMod {
     public static final String MOD_ID = "expansion_mod";
 
-    private static final String TREE_SKILL_IMPLEMENTATION = MOD_ID + ":return_to_forest";
-    private static final String TREE_ULTIMATE_IMPLEMENTATION = MOD_ID + ":forest_universe";
-    private static final String TREE_PASSIVE_IMPLEMENTATION = MOD_ID + ":expanding_forest_maze";
-    private static final String GOLD_SKILL_IMPLEMENTATION = MOD_ID + ":rising_fortune";
-    private static final String GOLD_ULTIMATE_IMPLEMENTATION = MOD_ID + ":money_making_explosion";
-    private static final String GOLD_PASSIVE_IMPLEMENTATION = MOD_ID + ":time_is_money";
-    private static final String TEA_SKILL_IMPLEMENTATION = MOD_ID + ":make_tea";
-    private static final String TEA_ULTIMATE_IMPLEMENTATION = MOD_ID + ":tea_style";
-    private static final String TEA_PASSIVE_IMPLEMENTATION = MOD_ID + ":elegant_tea_party";
-    private static final String LONG_SKILL_IMPLEMENTATION = MOD_ID + ":not_short";
-    private static final String LONG_ULTIMATE_IMPLEMENTATION = MOD_ID + ":pros_and_cons";
-    private static final String DX_SKILL_IMPLEMENTATION = MOD_ID + ":plane_differentiation";
-    private static final String DX_ULTIMATE_IMPLEMENTATION = MOD_ID + ":infinite_differentiation";
-    private static final String EYEBROW_SKILL_IMPLEMENTATION = MOD_ID + ":eyebrow_rise";
-    private static final String EYEBROW_ULTIMATE_IMPLEMENTATION = MOD_ID + ":skeptical_volley";
-    private static final String EYEBROW_PASSIVE_IMPLEMENTATION = MOD_ID + ":eyebrow_raise_face";
-    private static final String SIGMA_SKILL_IMPLEMENTATION = MOD_ID + ":accumulation";
-    private static final String SIGMA_ULTIMATE_IMPLEMENTATION = MOD_ID + ":converging_summation";
-    private static final String SIGMA_PASSIVE_IMPLEMENTATION = MOD_ID + ":endless_calculation";
-    private static final String GROUP_SKILL_IMPLEMENTATION = MOD_ID + ":duel";
-    private static final String GROUP_ULTIMATE_IMPLEMENTATION = MOD_ID + ":united_as_one";
-    private static final String GROUP_PASSIVE_IMPLEMENTATION = MOD_ID + ":letter_group";
-
-    @Override
-    public String id() {
-        return MOD_ID;
+    public static ResourceId ofId(String path) {
+        return new ResourceId(MOD_ID, path);
     }
 
     @Override
     public void register(ModContext context) {
-        registerTreeAbilities(context);
-        registerGoldAbilities(context);
-        registerTeaAbilities(context);
-        registerLongAbilities(context);
-        registerDxAbilities(context);
-        registerEyebrowAbilities(context);
-        registerSigmaAbilities(context);
-        registerGroupAbilities(context);
-        registerMainCharacter(context, "tree");
-        registerMainCharacter(context, "gold");
-        registerMainCharacter(context, "tea");
-        registerMainCharacter(context, "sigma");
-        context.content().registerFieldEffect(new FieldEffectDataRegistration(resource("field_effects/long_long_ago.json")));
-        registerFieldEffect(context, "differential_move_slow");
-        registerFieldEffect(context, "differential_attack_down");
-        registerFieldEffect(context, "differential_defense_down");
-        registerFieldEffect(context, "differential_integral_haste");
-        registerFieldEffect(context, "eyebrow_passive_marker");
-        registerFieldEffect(context, "letter_group_marker");
-        context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/long.json"), "i18n"));
-        context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/dx.json"), "i18n"));
-        context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/eyebrow.json"), "i18n"));
-        context.content().registerSupportCharacter(new SupportCharacterDataRegistration(resource("support/group.json"), "i18n"));
+        RegistrationBus bus = context.registrationBus();
+
+        SkillsInit.SKILLS.attach(bus);
+        UltimatesInit.ULTIMATES.attach(bus);
+        PassivesInit.PASSIVES.attach(bus);
+
+        SupportSkillsInit.SUPPORT_SKILLS.attach(bus);
+        SupportUltimatesInit.SUPPORT_ULTIMATES.attach(bus);
+        SupportPassivesInit.SUPPORT_PASSIVES.attach(bus);
+
+        FieldEffectsInit.FIELD_EFFECTS.attach(bus);
+
+        MainCharactersInit.MAIN_CHARACTERS.attach(bus);
+        SupportCharactersInit.SUPPORT_CHARACTERS.attach(bus);
     }
 
-    private static void registerTreeAbilities(ModContext context) {
-        context.abilities().registerSkillImplementation(TREE_SKILL_IMPLEMENTATION, parameters -> new ReturnToForestSkill(ReturnToForestSkill.Config.from(parameters)));
-        context.abilities().registerUltimateImplementation(TREE_ULTIMATE_IMPLEMENTATION, parameters -> new ForestUniverseUltimate(ForestUniverseUltimate.Config.from(parameters)));
-        context.abilities().registerPassiveImplementation(TREE_PASSIVE_IMPLEMENTATION, parameters -> new ExpandingForestMazePassive(ExpandingForestMazePassive.Config.from(parameters)));
-    }
-
-    private static void registerGoldAbilities(ModContext context) {
-        context.abilities().registerSkillImplementation(GOLD_SKILL_IMPLEMENTATION, parameters -> new RisingFortuneSkill(RisingFortuneSkill.Config.from(parameters)));
-        context.abilities().registerUltimateImplementation(GOLD_ULTIMATE_IMPLEMENTATION, parameters -> new MoneyMakingExplosionUltimate(MoneyMakingExplosionUltimate.Config.from(parameters)));
-        context.abilities().registerPassiveImplementation(GOLD_PASSIVE_IMPLEMENTATION, parameters -> new TimeIsMoneyPassive(TimeIsMoneyPassive.Config.from(parameters)));
-    }
-
-    private static void registerTeaAbilities(ModContext context) {
-        context.abilities().registerSkillImplementation(TEA_SKILL_IMPLEMENTATION, parameters -> new MakeTeaSkill(MakeTeaSkill.Config.from(parameters)));
-        context.abilities().registerUltimateImplementation(TEA_ULTIMATE_IMPLEMENTATION, parameters -> new TeaStyleUltimate(TeaStyleUltimate.Config.from(parameters)));
-        context.abilities().registerPassiveImplementation(TEA_PASSIVE_IMPLEMENTATION, parameters -> new ElegantTeaPartyPassive(ElegantTeaPartyPassive.Config.from(parameters)));
-    }
-
-    private static void registerLongAbilities(ModContext context) {
-        context.abilities().registerSupportSkillImplementation(LONG_SKILL_IMPLEMENTATION, parameters -> new NotShortSkill(NotShortSkill.Config.from(parameters)));
-        context.abilities().registerSupportUltimateImplementation(LONG_ULTIMATE_IMPLEMENTATION, parameters -> new ProsAndConsUltimate(ProsAndConsUltimate.Config.from(parameters)));
-    }
-
-    private static void registerDxAbilities(ModContext context) {
-        context.abilities().registerSupportSkillImplementation(DX_SKILL_IMPLEMENTATION,
-                parameters -> new PlaneDifferentiationSkill(PlaneDifferentiationSkill.Config.from(parameters)));
-        context.abilities().registerSupportUltimateImplementation(DX_ULTIMATE_IMPLEMENTATION,
-                parameters -> new InfiniteDifferentiationUltimate(InfiniteDifferentiationUltimate.Config.from(parameters)));
-    }
-
-    private static void registerEyebrowAbilities(ModContext context) {
-        context.abilities().registerSupportSkillImplementation(EYEBROW_SKILL_IMPLEMENTATION,
-                parameters -> new EyebrowRiseSkill(EyebrowRiseSkill.Config.from(parameters)));
-        context.abilities().registerSupportUltimateImplementation(EYEBROW_ULTIMATE_IMPLEMENTATION,
-                parameters -> new SkepticalVolleyUltimate(SkepticalVolleyUltimate.Config.from(parameters)));
-        context.abilities().registerSupportPassiveImplementation(EYEBROW_PASSIVE_IMPLEMENTATION,
-                parameters -> new EyebrowRaiseFacePassive(EyebrowRaiseFacePassive.Config.from(parameters)));
-    }
-
-    private static void registerSigmaAbilities(ModContext context) {
-        context.abilities().registerSkillImplementation(SIGMA_SKILL_IMPLEMENTATION,
-                parameters -> new AccumulationSkill(AccumulationSkill.Config.from(parameters)));
-        context.abilities().registerUltimateImplementation(SIGMA_ULTIMATE_IMPLEMENTATION,
-                parameters -> new ConvergingSummationUltimate(ConvergingSummationUltimate.Config.from(parameters)));
-        context.abilities().registerPassiveImplementation(SIGMA_PASSIVE_IMPLEMENTATION,
-                parameters -> new EndlessCalculationPassive(EndlessCalculationPassive.Config.from(parameters)));
-    }
-
-    private static void registerGroupAbilities(ModContext context) {
-        context.abilities().registerSupportSkillImplementation(GROUP_SKILL_IMPLEMENTATION,
-                parameters -> new DuelSkill(DuelSkill.Config.from(parameters)));
-        context.abilities().registerSupportUltimateImplementation(GROUP_ULTIMATE_IMPLEMENTATION,
-                parameters -> new UnitedAsOneUltimate(UnitedAsOneUltimate.Config.from(parameters)));
-        context.abilities().registerSupportPassiveImplementation(GROUP_PASSIVE_IMPLEMENTATION,
-                parameters -> new LetterGroupPassive(LetterGroupPassive.Config.from(parameters)));
-    }
-
-    private static void registerFieldEffect(ModContext context, String id) {
-        context.content().registerFieldEffect(new FieldEffectDataRegistration(resource("field_effects/" + id + ".json")));
-    }
-
-    private static void registerMainCharacter(ModContext context, String id) {
-        context.content().registerCharacter(new CharacterDataRegistration(resource("characters/" + id + ".json"), resource("abilities/" + id + "_skill.json"), resource("abilities/" + id + "_ultimate.json"), resource("abilities/" + id + "_passive.json"), "i18n"));
-    }
-
-    private static ResourceId resource(String path) {
-        return new ResourceId(MOD_ID, path);
-    }
 }

@@ -1,66 +1,58 @@
 package com.takoyaki3466.mojibattle.tree;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.AbilityStateLine;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.PassiveRuntime;
-import jp.takoa.mojibattle.battle.CombatantView;
+
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.presentation.AbilityStateLine;
+import jp.takoa.mojibattle.ability.runtime.PassiveRuntime;
+import jp.takoa.mojibattle.battle.combatant.CombatantView;
 
 import java.util.List;
 
-public final class ExpandingForestMazePassive implements PassiveRuntime {
-    private final Config config;
+public final class ExpandingForestMazePassive extends AbstractRuntime<ExpandingForestMazePassive.Config> implements PassiveRuntime {
     private int treeUnits;
 
     public ExpandingForestMazePassive(Config config) {
-        this.config = config;
+        super(config);
     }
+
 
     @Override
     public void onSkillActivated(AbilityActivationContext context) {
-        treeUnits = Math.min(config.treesPerUniverse(), treeUnits + 1);
+        treeUnits = Math.min(getConfig().treesPerUniverse(), treeUnits + 1);
     }
 
     @Override
     public float ultimateDamageMultiplier(CombatantView owner) {
-        return config.multiplier(WoodRank.fromTreeUnits(treeUnits, config));
+        return getConfig().multiplier(WoodRank.fromTreeUnits(treeUnits, getConfig()));
     }
 
     @Override
     public List<AbilityStateLine> stateLines(CombatantView owner) {
-        WoodRank rank = WoodRank.fromTreeUnits(treeUnits, config);
-        return List.of(
-                AbilityStateLine.of("state.expansion_mod.tree.rank." + rank.name().toLowerCase(), 100),
-                AbilityStateLine.of("state.expansion_mod.tree.units", 90,
-                        treeUnits, config.treesPerUniverse()));
+        WoodRank rank = WoodRank.fromTreeUnits(treeUnits, getConfig());
+        return List.of(AbilityStateLine.of("state.expansion_mod.tree.rank." + rank.name().toLowerCase(), 100), AbilityStateLine.of("state.expansion_mod.tree.units", 90, treeUnits, getConfig().treesPerUniverse()));
     }
 
-    public record Config(int treesPerGrove, int grovesPerForest, int forestsPerUniverse,
-                         float unrankedMultiplier, float treeMultiplier, float groveMultiplier,
-                         float forestMultiplier, float universeMultiplier) implements WoodRank.Progression {
-        private static final int DEFAULT_TREES_PER_GROVE = 2;
-        private static final int DEFAULT_GROVES_PER_FOREST = 3;
-        private static final int DEFAULT_FORESTS_PER_UNIVERSE = 2;
+    public record Config(
+            @ConfigInt(defaultValue = 2, min = 1) int treesPerGrove,
+            @ConfigInt(defaultValue = 3, min = 1) int grovesPerForest,
+            @ConfigInt(defaultValue = 2, min = 1) int forestsPerUniverse,
+            @ConfigFloat(defaultValue = .75f) float unrankedMultiplier,
+            @ConfigFloat(defaultValue = 1f) float treeMultiplier,
+            @ConfigFloat(defaultValue = 1.35f) float groveMultiplier,
+            @ConfigFloat(defaultValue = 1.75f) float forestMultiplier,
+            @ConfigFloat(defaultValue = 2.4f) float universeMultiplier) implements WoodRank.Progression {
 
         public Config {
-            Math.multiplyExact(Math.multiplyExact(treesPerGrove, grovesPerForest), forestsPerUniverse);
-            if (unrankedMultiplier < 0f || treeMultiplier < 0f || groveMultiplier < 0f
-                    || forestMultiplier < 0f || universeMultiplier < 0f) {
-                throw new IllegalArgumentException("Wood-rank multipliers must be non-negative");
+            try {
+                Math.multiplyExact(Math.multiplyExact(treesPerGrove, grovesPerForest), forestsPerUniverse);
+            } catch (ArithmeticException exception) {
+                throw new IllegalArgumentException("Config progression product exceeds int range: "
+                        + "treesPerGrove=" + treesPerGrove + ", grovesPerForest=" + grovesPerForest
+                        + ", forestsPerUniverse=" + forestsPerUniverse, exception);
             }
-        }
-
-        public static Config from(ConfigView parameters) {
-            return new Config(
-                    ConfigValues.positiveInt(parameters, "treesPerGrove", DEFAULT_TREES_PER_GROVE),
-                    ConfigValues.positiveInt(parameters, "grovesPerForest", DEFAULT_GROVES_PER_FOREST),
-                    ConfigValues.positiveInt(parameters, "forestsPerUniverse", DEFAULT_FORESTS_PER_UNIVERSE),
-                    ConfigValues.nonNegativeFloat(parameters, "unrankedMultiplier", .75f),
-                    ConfigValues.nonNegativeFloat(parameters, "treeMultiplier", 1f),
-                    ConfigValues.nonNegativeFloat(parameters, "groveMultiplier", 1.35f),
-                    ConfigValues.nonNegativeFloat(parameters, "forestMultiplier", 1.75f),
-                    ConfigValues.nonNegativeFloat(parameters, "universeMultiplier", 2.4f));
         }
 
         public float multiplier(WoodRank rank) {

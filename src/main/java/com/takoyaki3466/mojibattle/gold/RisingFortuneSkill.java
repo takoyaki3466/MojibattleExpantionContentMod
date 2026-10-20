@@ -1,19 +1,19 @@
 package com.takoyaki3466.mojibattle.gold;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.SkillRuntime;
-import jp.takoa.mojibattle.battle.DamageRequest;
-import jp.takoa.mojibattle.battle.DamageType;
-import jp.takoa.mojibattle.battle.DelayedStrikeSpec;
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigResource;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.SkillRuntime;
+import jp.takoa.mojibattle.battle.action.spec.DelayedStrikeSpec;
+import jp.takoa.mojibattle.battle.damage.DamageRequest;
+import jp.takoa.mojibattle.battle.damage.DamageType;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class RisingFortuneSkill implements SkillRuntime {
-    private final Config config;
+public final class RisingFortuneSkill extends AbstractRuntime<RisingFortuneSkill.Config> implements SkillRuntime {
 
     public RisingFortuneSkill(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
@@ -21,21 +21,15 @@ public final class RisingFortuneSkill implements SkillRuntime {
         if (context.target() == null || !context.target().alive()) {
             return false;
         }
-        context.actions().spawnDelayedStrike(context.user(), context.target(), new DelayedStrikeSpec(
-                config.dropDelaySeconds(), DamageRequest.of(config.damage(), DamageType.SKILL),
-                config.effectId(), config.goldTexture(), config.effectScale()));
+        context.actions().spawnDelayedStrike(context.user(), context.target(), new DelayedStrikeSpec(getConfig().dropDelaySeconds(), DamageRequest.of(getConfig().damage(), DamageType.SKILL), getConfig().effectId(), getConfig().goldTexture(), getConfig().effectScale()));
         return true;
     }
 
-    public record Config(float damage, float dropDelaySeconds, ResourceId effectId,
-                         ResourceId goldTexture, float effectScale) {
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.nonNegativeFloat(values, "damage", 38f),
-                    ConfigValues.nonNegativeFloat(values, "dropDelaySeconds", .55f),
-                    ConfigValues.resourceId(values, "effectId", "mojibattle:stock"),
-                    ConfigValues.resourceId(values, "goldTexture", "expansion_mod:textures/gold.png"),
-                    ConfigValues.positiveFloat(values, "effectScale", 5.5f));
-        }
+    public record Config(
+            @ConfigFloat(defaultValue = 38f) float damage,
+            @ConfigFloat(defaultValue = .55f) float dropDelaySeconds,
+            @ConfigResource(defaultValue = "mojibattle:stock") ResourceId effectId,
+            @ConfigResource(defaultValue = "expansion_mod:textures/gold.png") ResourceId goldTexture,
+            @ConfigFloat(defaultValue = 5.5f, exclusiveMin = true) float effectScale) {
     }
 }

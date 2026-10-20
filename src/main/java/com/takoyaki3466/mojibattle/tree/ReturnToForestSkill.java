@@ -1,47 +1,42 @@
 package com.takoyaki3466.mojibattle.tree;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.SkillRuntime;
-import jp.takoa.mojibattle.battle.DamageType;
+import jp.takoa.mojibattle.ability.config.*;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigResource;
+import jp.takoa.mojibattle.ability.config.annotations.DisplayValue;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.SkillRuntime;
+import jp.takoa.mojibattle.battle.combatant.CombatantView;
+import jp.takoa.mojibattle.battle.damage.DamageType;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class ReturnToForestSkill implements SkillRuntime {
-    private final Config config;
+public final class ReturnToForestSkill extends AbstractRuntime<ReturnToForestSkill.Config> implements SkillRuntime {
 
     public ReturnToForestSkill(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
     public boolean tryActivate(AbilityActivationContext context) {
-        var target = context.target();
+        CombatantView target = context.target();
         if (target == null || !target.alive()) {
             return false;
         }
 
-        context.actions().damage(context.user(), target, config.damage(), DamageType.SKILL);
-        context.actions().knockbackAwayFrom(context.user(), target, config.knockbackDistance());
-        context.actions().emitEffect(target, config.impactEffect(), config.effectScale(), config.effectDurationSeconds());
+        context.actions().damage(context.user(), target, getConfig().damage(), DamageType.SKILL);
+        context.actions().knockbackAwayFrom(context.user(), target, getConfig().knockbackDistance());
+        context.actions().emitEffect(target, getConfig().impactEffect(), getConfig().effectScale(), getConfig().effectDurationSeconds());
+
         return true;
     }
 
-    public record Config(float damage, float knockbackDistance, ResourceId impactEffect,
-                         float effectScale, float effectDurationSeconds) {
-        private static final float DEFAULT_DAMAGE = 30f;
-        private static final float DEFAULT_KNOCKBACK_DISTANCE = 1.4f;
-        private static final float DEFAULT_EFFECT_SCALE = 4.5f;
-        private static final float DEFAULT_EFFECT_DURATION_SECONDS = .45f;
-        private static final String DEFAULT_IMPACT_EFFECT = "mojibattle:wind";
 
-        public static Config from(ConfigView parameters) {
-            return new Config(
-                    ConfigValues.nonNegativeFloat(parameters, "damage", DEFAULT_DAMAGE),
-                    ConfigValues.nonNegativeFloat(parameters, "knockbackDistance", DEFAULT_KNOCKBACK_DISTANCE),
-                    ConfigValues.resourceId(parameters, "impactEffectId", DEFAULT_IMPACT_EFFECT),
-                    ConfigValues.positiveFloat(parameters, "effectScale", DEFAULT_EFFECT_SCALE),
-                    ConfigValues.positiveFloat(parameters, "effectDurationSeconds", DEFAULT_EFFECT_DURATION_SECONDS));
-        }
+    public record Config(
+            @ConfigFloat(defaultValue = 30f) @DisplayValue float damage,
+            @ConfigFloat(defaultValue = 1.4f) float knockbackDistance,
+            @ConfigResource(name = "impactEffectId", defaultValue = "mojibattle:wind") ResourceId impactEffect,
+            @ConfigFloat(defaultValue = 4.5f, exclusiveMin = true) float effectScale,
+            @ConfigFloat(defaultValue = 0.45f, exclusiveMin = true) float effectDurationSeconds) {
     }
+
 }

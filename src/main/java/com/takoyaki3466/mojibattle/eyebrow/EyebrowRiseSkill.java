@@ -1,21 +1,23 @@
 package com.takoyaki3466.mojibattle.eyebrow;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.SupportAbilityActivationContext;
-import jp.takoa.mojibattle.ability.SupportSkillRuntime;
-import jp.takoa.mojibattle.battle.DamageRequest;
-import jp.takoa.mojibattle.battle.DamageType;
-import jp.takoa.mojibattle.battle.ProjectileSpec;
-import jp.takoa.mojibattle.battle.SupportNormalAttackModifier;
+import com.takoyaki3466.mojibattle.ExpansionMod;
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigResource;
+import jp.takoa.mojibattle.ability.context.SupportAbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.SupportAbilityRuntime;
+import jp.takoa.mojibattle.battle.action.spec.ProjectileSpec;
+import jp.takoa.mojibattle.battle.damage.DamageRequest;
+import jp.takoa.mojibattle.battle.damage.DamageType;
+import jp.takoa.mojibattle.battle.modifier.SupportNormalAttackModifier;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class EyebrowRiseSkill implements SupportSkillRuntime {
-    private static final ResourceId HASTE_ID = new ResourceId("expansion_mod", "eyebrow_rise_haste");
-    private final Config config;
+public final class EyebrowRiseSkill extends AbstractRuntime<EyebrowRiseSkill.Config> implements SupportAbilityRuntime {
+    private static final ResourceId HASTE_ID = ExpansionMod.ofId("eyebrow_rise_haste");
 
     public EyebrowRiseSkill(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
@@ -23,40 +25,28 @@ public final class EyebrowRiseSkill implements SupportSkillRuntime {
         if (context.target() == null || !context.target().alive()) {
             return false;
         }
-        EyebrowState.add(context.state(), config.levelGain(), config.maximumLevel());
-        context.supportActions().addNormalAttackModifier(new SupportNormalAttackModifier(
-                HASTE_ID, 200, SupportNormalAttackModifier.Stacking.MULTIPLY,
-                1f, config.intervalMultiplier(), 1, 1, 1f, null, config.effectId()),
-                config.durationSeconds());
-        context.actions().spawnProjectile(context.owner(), context.target(), new ProjectileSpec(
-                DamageRequest.of(config.damage(), DamageType.SKILL), config.projectileSpeed(),
-                config.projectileRadius(), config.projectileLifetimeSeconds(), 1, 0f, 1,
-                config.projectileTexture(), config.effectId()));
+        EyebrowState.add(context.state(), getConfig().levelGain(), getConfig().maximumLevel());
+        context.supportActions().addNormalAttackModifier(new SupportNormalAttackModifier(HASTE_ID, 200, SupportNormalAttackModifier.Stacking.MULTIPLY, 1f, getConfig().intervalMultiplier(), 1, 1, 1f, null, getConfig().effectId()), getConfig().durationSeconds());
+        context.actions().spawnProjectile(context.owner(), context.target(), new ProjectileSpec(DamageRequest.of(getConfig().damage(), DamageType.SKILL), getConfig().projectileSpeed(), getConfig().projectileRadius(), getConfig().projectileLifetimeSeconds(), 1, 0f, 1, getConfig().projectileTexture(), getConfig().effectId()));
         return true;
     }
 
-    public record Config(int levelGain, int maximumLevel, float intervalMultiplier,
-                         float durationSeconds, float damage, float projectileSpeed,
-                         float projectileRadius, float projectileLifetimeSeconds,
-                         ResourceId projectileTexture, ResourceId effectId) {
-        public Config {
-            if (intervalMultiplier > 1f || levelGain > maximumLevel) {
-                throw new IllegalArgumentException("Invalid eyebrow skill values");
-            }
-        }
+    public record Config(
+            @ConfigInt(defaultValue = 10, min = 1) int levelGain, @ConfigInt(defaultValue = 200, min = 1) int maximumLevel,
+            @ConfigFloat(defaultValue = .65f, exclusiveMin = true, max = 1f) float intervalMultiplier,
+            @ConfigFloat(defaultValue = 6f, exclusiveMin = true) float durationSeconds,
+            @ConfigFloat(defaultValue = 42f) float damage,
+            @ConfigFloat(defaultValue = 15f, exclusiveMin = true) float projectileSpeed,
+            @ConfigFloat(defaultValue = .5f, exclusiveMin = true) float projectileRadius,
+            @ConfigFloat(defaultValue = 2.5f, exclusiveMin = true) float projectileLifetimeSeconds,
+            @ConfigResource(defaultValue = "expansion_mod:textures/eyebrow.png") ResourceId projectileTexture,
+            @ConfigResource(defaultValue = "mojibattle:critical") ResourceId effectId) {
 
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.positiveInt(values, "levelGain", 10),
-                    ConfigValues.positiveInt(values, "maximumLevel", 200),
-                    ConfigValues.positiveFloat(values, "intervalMultiplier", .65f),
-                    ConfigValues.positiveFloat(values, "durationSeconds", 6f),
-                    ConfigValues.nonNegativeFloat(values, "damage", 42f),
-                    ConfigValues.positiveFloat(values, "projectileSpeed", 15f),
-                    ConfigValues.positiveFloat(values, "projectileRadius", .5f),
-                    ConfigValues.positiveFloat(values, "projectileLifetimeSeconds", 2.5f),
-                    ConfigValues.resourceId(values, "projectileTexture", "expansion_mod:textures/eyebrow.png"),
-                    ConfigValues.resourceId(values, "effectId", "mojibattle:critical"));
+        public Config {
+            if (levelGain > maximumLevel) {
+                throw new IllegalArgumentException("Config 'levelGain' must not exceed 'maximumLevel': "
+                        + levelGain + " > " + maximumLevel);
+            }
         }
     }
 }

@@ -1,22 +1,23 @@
 package com.takoyaki3466.mojibattle.gold;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.AbilityStateLine;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.PassiveRuntime;
-import jp.takoa.mojibattle.ability.PassiveUpdateContext;
-import jp.takoa.mojibattle.battle.CombatantView;
+
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.context.PassiveUpdateContext;
+import jp.takoa.mojibattle.ability.presentation.AbilityStateLine;
+import jp.takoa.mojibattle.ability.runtime.PassiveRuntime;
+import jp.takoa.mojibattle.battle.combatant.CombatantView;
 
 import java.util.List;
 
-public final class TimeIsMoneyPassive implements PassiveRuntime {
-    private final Config config;
+public final class TimeIsMoneyPassive extends AbstractRuntime<TimeIsMoneyPassive.Config> implements PassiveRuntime {
     private int fortune;
     private float nextTimedGain;
 
     public TimeIsMoneyPassive(Config config) {
-        this.config = config;
+        super(config);
         nextTimedGain = config.timedGainIntervalSeconds();
     }
 
@@ -27,46 +28,35 @@ public final class TimeIsMoneyPassive implements PassiveRuntime {
 
     @Override
     public void onUltimateActivated(AbilityActivationContext context) {
-        fortune = Math.max(0, fortune - config.fortuneConsumedByUltimate());
+        fortune = Math.max(0, fortune - getConfig().fortuneConsumedByUltimate());
     }
 
     @Override
     public void update(PassiveUpdateContext context) {
         while (context.battleElapsedSeconds() >= nextTimedGain) {
             addFortune(1);
-            nextTimedGain += config.timedGainIntervalSeconds();
+            nextTimedGain += getConfig().timedGainIntervalSeconds();
         }
     }
 
     @Override
     public float criticalRateModifier(CombatantView owner) {
-        return fortune * config.criticalRatePerFortune();
+        return fortune * getConfig().criticalRatePerFortune();
     }
 
     @Override
     public List<AbilityStateLine> stateLines(CombatantView owner) {
-        return List.of(AbilityStateLine.of("state.expansion_mod.gold.fortune", 100,
-                fortune, config.maximumFortune()));
+        return List.of(AbilityStateLine.of("state.expansion_mod.gold.fortune", 100, fortune, getConfig().maximumFortune()));
     }
 
     private void addFortune(int amount) {
-        fortune = Math.min(config.maximumFortune(), fortune + amount);
+        fortune = Math.min(getConfig().maximumFortune(), fortune + amount);
     }
 
-    public record Config(int maximumFortune, int fortuneConsumedByUltimate,
-                         float criticalRatePerFortune, float timedGainIntervalSeconds) {
-        public Config {
-            if (fortuneConsumedByUltimate < 0) {
-                throw new IllegalArgumentException("fortuneConsumedByUltimate must be non-negative");
-            }
-        }
-
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.positiveInt(values, "maximumFortune", 10),
-                    ConfigValues.positiveInt(values, "fortuneConsumedByUltimate", 4),
-                    ConfigValues.nonNegativeFloat(values, "criticalRatePerFortune", .05f),
-                    ConfigValues.positiveFloat(values, "timedGainIntervalSeconds", 30f));
-        }
+    public record Config(
+            @ConfigInt(defaultValue = 10, min = 1) int maximumFortune,
+            @ConfigInt(defaultValue = 4, min = 1) int fortuneConsumedByUltimate,
+            @ConfigFloat(defaultValue = .05f) float criticalRatePerFortune,
+            @ConfigFloat(defaultValue = 30f, exclusiveMin = true) float timedGainIntervalSeconds) {
     }
 }

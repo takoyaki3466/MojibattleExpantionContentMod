@@ -1,55 +1,45 @@
 package com.takoyaki3466.mojibattle.longsupport;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.SupportAbilityActivationContext;
-import jp.takoa.mojibattle.ability.SupportUltimateRuntime;
-import jp.takoa.mojibattle.battle.StatusDuration;
-import jp.takoa.mojibattle.battle.StatusEffectType;
-import jp.takoa.mojibattle.battle.StatusSpec;
-import jp.takoa.mojibattle.battle.StatusStacking;
+import com.takoyaki3466.mojibattle.ExpansionMod;
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.context.SupportAbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.SupportAbilityRuntime;
+import jp.takoa.mojibattle.battle.combatant.CombatantView;
+import jp.takoa.mojibattle.battle.status.StatusDuration;
+import jp.takoa.mojibattle.battle.status.StatusEffectType;
+import jp.takoa.mojibattle.battle.status.StatusSpec;
+import jp.takoa.mojibattle.battle.status.StatusStacking;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class ProsAndConsUltimate implements SupportUltimateRuntime {
-    private static final ResourceId ALLY_STATUS = new ResourceId("expansion_mod", "pros_and_cons_ally");
-    private static final ResourceId ENEMY_STATUS = new ResourceId("expansion_mod", "pros_and_cons_enemy");
-    private final Config config;
+public final class ProsAndConsUltimate extends AbstractRuntime<ProsAndConsUltimate.Config> implements SupportAbilityRuntime {
+    private static final ResourceId ALLY_STATUS = ExpansionMod.ofId("pros_and_cons_ally");
+    private static final ResourceId ENEMY_STATUS = ExpansionMod.ofId("pros_and_cons_enemy");
 
     public ProsAndConsUltimate(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
     public boolean activate(SupportAbilityActivationContext context) {
-        for (var ally : context.actions().alliesOf(context.owner())) {
-            context.actions().applyStatus(context.owner(), ally,
-                    permanentStack(ALLY_STATUS, config.allyAttackIntervalMultiplier()));
+        for (CombatantView ally : context.actions().alliesOf(context.owner())) {
+            context.actions().applyStatus(context.owner(), ally, permanentStack(ALLY_STATUS, getConfig().allyAttackIntervalMultiplier()));
         }
-        for (var enemy : context.actions().enemiesOf(context.owner())) {
-            context.actions().applyStatus(context.owner(), enemy,
-                    permanentStack(ENEMY_STATUS, config.enemyAttackIntervalMultiplier()));
+        for (CombatantView enemy : context.actions().enemiesOf(context.owner())) {
+            context.actions().applyStatus(context.owner(), enemy, permanentStack(ENEMY_STATUS, getConfig().enemyAttackIntervalMultiplier()));
         }
         return true;
     }
 
     private StatusSpec permanentStack(ResourceId id, float magnitude) {
-        return new StatusSpec(id, StatusEffectType.NORMAL_ATTACK_INTERVAL_MULTIPLIER, magnitude,
-                StatusDuration.permanent(), StatusStacking.ADD_STACK, config.maximumStacks(), 1f);
+        return new StatusSpec(id, StatusEffectType.NORMAL_ATTACK_INTERVAL_MULTIPLIER, magnitude, StatusDuration.permanent(), StatusStacking.ADD_STACK, getConfig().maximumStacks(), 1f);
     }
 
-    public record Config(float allyAttackIntervalMultiplier, float enemyAttackIntervalMultiplier,
-                         int maximumStacks) {
-        public Config {
-            if (allyAttackIntervalMultiplier > 1f || enemyAttackIntervalMultiplier < 1f) {
-                throw new IllegalArgumentException("Pros and Cons interval multipliers are reversed");
-            }
-        }
+    public record Config(
+            @ConfigFloat(defaultValue = .92f, exclusiveMin = true, max = 1f) float allyAttackIntervalMultiplier,
+            @ConfigFloat(defaultValue = 1.08f, min = 1f) float enemyAttackIntervalMultiplier,
+            @ConfigInt(defaultValue = 100, min = 1) int maximumStacks) {
 
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.positiveFloat(values, "allyAttackIntervalMultiplier", .92f),
-                    ConfigValues.positiveFloat(values, "enemyAttackIntervalMultiplier", 1.08f),
-                    ConfigValues.positiveInt(values, "maximumStacks", 100));
-        }
     }
 }

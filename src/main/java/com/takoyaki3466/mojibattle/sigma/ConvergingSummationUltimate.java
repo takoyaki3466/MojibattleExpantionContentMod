@@ -1,19 +1,19 @@
 package com.takoyaki3466.mojibattle.sigma;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.UltimateRuntime;
-import jp.takoa.mojibattle.battle.DamageRequest;
-import jp.takoa.mojibattle.battle.DamageResult;
-import jp.takoa.mojibattle.battle.DamageType;
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigResource;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.UltimateRuntime;
+import jp.takoa.mojibattle.battle.damage.DamageRequest;
+import jp.takoa.mojibattle.battle.damage.DamageResult;
+import jp.takoa.mojibattle.battle.damage.DamageType;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class ConvergingSummationUltimate implements UltimateRuntime {
-    private final Config config;
+public final class ConvergingSummationUltimate extends AbstractRuntime<ConvergingSummationUltimate.Config> implements UltimateRuntime {
 
     public ConvergingSummationUltimate(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
@@ -25,27 +25,21 @@ public final class ConvergingSummationUltimate implements UltimateRuntime {
         DamageResult result;
         EndlessCalculationPassive.beginUltimateDamage();
         try {
-            result = context.actions().damage(context.user(), context.target(),
-                    new DamageRequest(config.damagePerStack(), DamageType.ULTIMATE, false, false));
+            result = context.actions().damage(context.user(), context.target(), new DamageRequest(getConfig().damagePerStack(), DamageType.ULTIMATE, false, false));
         } finally {
             EndlessCalculationPassive.endUltimateDamage();
         }
         if (result.dealtDamage() <= 0f) {
             return false;
         }
-        context.actions().emitEffect(context.target(), config.effectId(),
-                config.effectScale(), config.effectDurationSeconds());
+        context.actions().emitEffect(context.target(), getConfig().effectId(), getConfig().effectScale(), getConfig().effectDurationSeconds());
         return true;
     }
 
-    public record Config(float damagePerStack, ResourceId effectId,
-                         float effectScale, float effectDurationSeconds) {
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.nonNegativeFloat(values, "damagePerStack", 60f),
-                    ConfigValues.resourceId(values, "effectId", "mojibattle:critical"),
-                    ConfigValues.positiveFloat(values, "effectScale", 10f),
-                    ConfigValues.positiveFloat(values, "effectDurationSeconds", 1f));
-        }
+    public record Config(
+            @ConfigFloat(defaultValue = 60f) float damagePerStack,
+            @ConfigResource(defaultValue = "mojibattle:critical") ResourceId effectId,
+            @ConfigFloat(defaultValue = 10f, exclusiveMin = true) float effectScale,
+            @ConfigFloat(defaultValue = 1f, exclusiveMin = true) float effectDurationSeconds) {
     }
 }

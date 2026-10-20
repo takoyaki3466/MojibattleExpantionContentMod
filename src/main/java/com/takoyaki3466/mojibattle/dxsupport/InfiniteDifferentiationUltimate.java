@@ -1,44 +1,33 @@
 package com.takoyaki3466.mojibattle.dxsupport;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.SupportAbilityActivationContext;
-import jp.takoa.mojibattle.ability.SupportUltimateRuntime;
-import jp.takoa.mojibattle.battle.SupportNormalAttackModifier;
+import com.takoyaki3466.mojibattle.ExpansionMod;
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigFloat;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigResource;
+import jp.takoa.mojibattle.ability.context.SupportAbilityActivationContext;
+import jp.takoa.mojibattle.ability.runtime.SupportAbilityRuntime;
+import jp.takoa.mojibattle.battle.modifier.SupportNormalAttackModifier;
 import jp.takoa.mojibattle.resource.ResourceId;
 
-public final class InfiniteDifferentiationUltimate implements SupportUltimateRuntime {
-    private static final ResourceId MODIFIER_ID = new ResourceId("expansion_mod", "infinite_differentiation");
-    private final Config config;
+public final class InfiniteDifferentiationUltimate extends AbstractRuntime<InfiniteDifferentiationUltimate.Config> implements SupportAbilityRuntime {
+    private static final ResourceId MODIFIER_ID = ExpansionMod.ofId("infinite_differentiation");
 
     public InfiniteDifferentiationUltimate(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
     public boolean activate(SupportAbilityActivationContext context) {
-        context.supportActions().addNormalAttackModifier(new SupportNormalAttackModifier(
-                MODIFIER_ID, 100, SupportNormalAttackModifier.Stacking.MULTIPLY,
-                config.damageMultiplier(), config.intervalMultiplier(), 1,
-                config.hitsPerAttack(), 1f, config.projectileTexture(), config.effectId()));
+        context.supportActions().addNormalAttackModifier(new SupportNormalAttackModifier(MODIFIER_ID, 100, SupportNormalAttackModifier.Stacking.MULTIPLY, getConfig().damageMultiplier(), getConfig().intervalMultiplier(), 1, getConfig().hitsPerAttack(), 1f, getConfig().projectileTexture(), getConfig().effectId()));
         return true;
     }
 
-    public record Config(float damageMultiplier, float intervalMultiplier, int hitsPerAttack,
-                         ResourceId projectileTexture, ResourceId effectId) {
-        public Config {
-            if (intervalMultiplier > 1f) {
-                throw new IllegalArgumentException("intervalMultiplier must not exceed 1");
-            }
-        }
-
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.positiveFloat(values, "damageMultiplier", .55f),
-                    ConfigValues.positiveFloat(values, "intervalMultiplier", .82f),
-                    ConfigValues.positiveInt(values, "hitsPerAttack", 3),
-                    ConfigValues.resourceId(values, "projectileTexture", "expansion_mod:textures/dx.png"),
-                    ConfigValues.resourceId(values, "effectId", "mojibattle:impact"));
-        }
+    public record Config(
+            @ConfigFloat(defaultValue = .55f, exclusiveMin = true) float damageMultiplier,
+            @ConfigFloat(defaultValue = .82f, exclusiveMin = true, max = 1f) float intervalMultiplier,
+            @ConfigInt(defaultValue = 3, min = 1) int hitsPerAttack,
+            @ConfigResource(defaultValue = "expansion_mod:textures/dx.png") ResourceId projectileTexture,
+            @ConfigResource(defaultValue = "mojibattle:impact") ResourceId effectId) {
     }
 }

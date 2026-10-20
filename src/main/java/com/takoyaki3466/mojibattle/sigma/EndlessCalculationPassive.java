@@ -1,23 +1,22 @@
 package com.takoyaki3466.mojibattle.sigma;
 
-import com.takoyaki3466.mojibattle.config.ConfigValues;
-import jp.takoa.mojibattle.ability.AbilityActivationContext;
-import jp.takoa.mojibattle.ability.AbilityStateLine;
-import jp.takoa.mojibattle.ability.ConfigView;
-import jp.takoa.mojibattle.ability.PassiveRuntime;
-import jp.takoa.mojibattle.battle.CombatantView;
+
+import jp.takoa.mojibattle.ability.config.AbstractRuntime;
+import jp.takoa.mojibattle.ability.config.annotations.ConfigInt;
+import jp.takoa.mojibattle.ability.context.AbilityActivationContext;
+import jp.takoa.mojibattle.ability.presentation.AbilityStateLine;
+import jp.takoa.mojibattle.ability.runtime.PassiveRuntime;
+import jp.takoa.mojibattle.battle.combatant.CombatantView;
 
 import java.util.List;
 
-public final class EndlessCalculationPassive implements PassiveRuntime {
-    private static final ThreadLocal<Boolean> ULTIMATE_DAMAGE_IN_PROGRESS =
-            ThreadLocal.withInitial(() -> false);
+public final class EndlessCalculationPassive extends AbstractRuntime<EndlessCalculationPassive.Config> implements PassiveRuntime {
+    private static final ThreadLocal<Boolean> ULTIMATE_DAMAGE_IN_PROGRESS = ThreadLocal.withInitial(() -> false);
 
-    private final Config config;
     private int stacks;
 
     public EndlessCalculationPassive(Config config) {
-        this.config = config;
+        super(config);
     }
 
     @Override
@@ -39,19 +38,17 @@ public final class EndlessCalculationPassive implements PassiveRuntime {
 
     @Override
     public float criticalRateModifier(CombatantView owner) {
-        return ultimateDamageInProgress() && stacks >= config.guaranteedCriticalMinimumStacks()
-                ? 1f : 0f;
+        return ultimateDamageInProgress() && stacks >= getConfig().guaranteedCriticalMinimumStacks() ? 1f : 0f;
     }
 
     @Override
     public boolean ignoresDefense(CombatantView owner) {
-        return ultimateDamageInProgress() && stacks >= config.defenseIgnoreMinimumStacks();
+        return ultimateDamageInProgress() && stacks >= getConfig().defenseIgnoreMinimumStacks();
     }
 
     @Override
     public List<AbilityStateLine> stateLines(CombatantView owner) {
-        return List.of(AbilityStateLine.of(
-                "state.expansion_mod.sigma.summation", 100, stacks));
+        return List.of(AbilityStateLine.of("state.expansion_mod.sigma.summation", 100, stacks));
     }
 
     static void beginUltimateDamage() {
@@ -66,18 +63,16 @@ public final class EndlessCalculationPassive implements PassiveRuntime {
         return ULTIMATE_DAMAGE_IN_PROGRESS.get();
     }
 
-    public record Config(int defenseIgnoreMinimumStacks, int guaranteedCriticalMinimumStacks) {
+    public record Config(
+            @ConfigInt(defaultValue = 3, min = 1) int defenseIgnoreMinimumStacks,
+            @ConfigInt(defaultValue = 5, min = 1) int guaranteedCriticalMinimumStacks) {
+
         public Config {
             if (guaranteedCriticalMinimumStacks < defenseIgnoreMinimumStacks) {
-                throw new IllegalArgumentException(
-                        "guaranteedCriticalMinimumStacks must be at least defenseIgnoreMinimumStacks");
+                throw new IllegalArgumentException("Config 'guaranteedCriticalMinimumStacks' must be at least "
+                        + "'defenseIgnoreMinimumStacks': " + guaranteedCriticalMinimumStacks
+                        + " < " + defenseIgnoreMinimumStacks);
             }
-        }
-
-        public static Config from(ConfigView values) {
-            return new Config(
-                    ConfigValues.positiveInt(values, "defenseIgnoreMinimumStacks", 3),
-                    ConfigValues.positiveInt(values, "guaranteedCriticalMinimumStacks", 5));
         }
     }
 }
