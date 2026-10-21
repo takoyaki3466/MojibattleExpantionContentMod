@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.takoyaki3466"
-version = "1.4.0"
+version = "1.4.1"
 
 repositories {
     mavenLocal()
@@ -16,7 +16,7 @@ java {
 
 val bigVersion = "0.9"
 val betaOrRelease = "beta"
-val smallVersion = "1"
+val smallVersion = "2"
 
 dependencies {
     compileOnly("jp.takoa.mojibattle:mojibattle-api:v$bigVersion-$betaOrRelease-$smallVersion")
