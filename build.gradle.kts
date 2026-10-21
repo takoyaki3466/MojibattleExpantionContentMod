@@ -16,7 +16,7 @@ java {
 
 val bigVersion = "0.9"
 val betaOrRelease = "beta"
-val smallVersion = "2"
+val smallVersion = "3"
 
 dependencies {
     compileOnly("jp.takoa.mojibattle:mojibattle-api:v$bigVersion-$betaOrRelease-$smallVersion")
