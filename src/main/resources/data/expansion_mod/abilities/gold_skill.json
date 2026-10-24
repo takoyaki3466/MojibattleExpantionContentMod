@@ -6,6 +6,7 @@
   "cooldownSeconds": 7.0,
   "parameters": {
     "damage": 38.0,
+    "ultimatePoints": 18.0,
     "dropDelaySeconds": 0.55,
     "effectId": "mojibattle:stock",
     "goldTexture": "expansion_mod:textures/gold.png",

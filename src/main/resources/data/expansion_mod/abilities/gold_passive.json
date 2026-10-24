@@ -7,6 +7,7 @@
     "maximumFortune": 10,
     "fortuneConsumedByUltimate": 4,
     "criticalRatePerFortune": 0.05,
+    "ultimateGaugeRatioPerFortunePerSecond": 0.001,
     "timedGainIntervalSeconds": 30.0
   }
 }

@@ -9,8 +9,8 @@
     "baseDamage": 100.0,
     "activationEffectId": "mojibattle:family",
     "impactEffectId": "mojibattle:impact",
-    "activationEffectScale": 8.0,
-    "impactEffectScale": 6.0,
+    "activationEffectScale": 32.0,
+    "impactEffectScale": 24.0,
     "effectDurationSeconds": 0.9
   }
 }

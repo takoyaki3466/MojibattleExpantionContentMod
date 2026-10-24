@@ -33,6 +33,13 @@ public final class TimeIsMoneyPassive extends AbstractRuntime<TimeIsMoneyPassive
 
     @Override
     public void update(PassiveUpdateContext context) {
+        if (fortune > 0) {
+            float points = context.owner().maximumUltimatePoints()
+                    * getConfig().ultimateGaugeRatioPerFortunePerSecond()
+                    * fortune
+                    * context.deltaSeconds();
+            context.actions().addUltimatePoints(context.owner(), points);
+        }
         while (context.battleElapsedSeconds() >= nextTimedGain) {
             addFortune(1);
             nextTimedGain += getConfig().timedGainIntervalSeconds();
@@ -57,6 +64,8 @@ public final class TimeIsMoneyPassive extends AbstractRuntime<TimeIsMoneyPassive
             @ConfigInt(defaultValue = 10, min = 1) int maximumFortune,
             @ConfigInt(defaultValue = 4, min = 1) int fortuneConsumedByUltimate,
             @ConfigFloat(defaultValue = .05f) float criticalRatePerFortune,
+            @ConfigFloat(defaultValue = .001f, exclusiveMin = true, max = 1f)
+            float ultimateGaugeRatioPerFortunePerSecond,
             @ConfigFloat(defaultValue = 30f, exclusiveMin = true) float timedGainIntervalSeconds) {
     }
 }

@@ -40,6 +40,11 @@ public final class ElegantTeaPartyPassive extends AbstractRuntime<ElegantTeaPart
     }
 
     @Override
+    public float attackMultiplier(CombatantView owner) {
+        return teaStyleRemaining > 0f ? getConfig().attackMultiplier() : 1f;
+    }
+
+    @Override
     public List<NormalAttackModifier> normalAttackModifiers(CombatantView owner) {
         if (teaStyleRemaining <= 0f) {
             return List.of();
@@ -56,6 +61,7 @@ public final class ElegantTeaPartyPassive extends AbstractRuntime<ElegantTeaPart
             @ConfigFloat(defaultValue = 3f, exclusiveMin = true) float skillStateDurationSeconds,
             @ConfigFloat(defaultValue = 12f, exclusiveMin = true) float ultimateStateDurationSeconds,
             @ConfigFloat(defaultValue = .5f, max = 1f) float ultimateRefundRatio,
+            @ConfigFloat(defaultValue = 1.25f, min = 1f, exclusiveMin = true) float attackMultiplier,
             @ConfigFloat(defaultValue = .58f, exclusiveMin = true) float attackIntervalMultiplier,
             @ConfigInt(defaultValue = 2, min = 1) int projectileCountDelta,
             @ConfigFloat(defaultValue = 42f) float spreadDegrees,

@@ -28,11 +28,13 @@ public final class MakeTeaSkill extends AbstractRuntime<MakeTeaSkill.Config> imp
         }
         context.actions().applyStatus(context.user(), context.target(), StatusSpec.multiplier(SLOW_STATUS, StatusEffectType.MOVE_SPEED_MULTIPLIER, getConfig().slowMultiplier(), StatusDuration.seconds(getConfig().slowDurationSeconds())));
         context.actions().spawnProjectile(context.user(), context.target(), new ProjectileSpec(DamageRequest.of(getConfig().damage(), DamageType.SKILL), getConfig().projectileSpeed(), getConfig().projectileRadius(), getConfig().projectileLifetimeSeconds(), 1, 0f, 1, getConfig().projectileTexture(), getConfig().effectId()));
+        context.actions().addUltimatePoints(context.user(), getConfig().ultimatePoints());
         return true;
     }
 
     public record Config(
             @ConfigFloat(defaultValue = 34f) float damage,
+            @ConfigFloat(defaultValue = 18f, exclusiveMin = true) float ultimatePoints,
             @ConfigFloat(defaultValue = .62f, exclusiveMin = true, max = 1f) float slowMultiplier,
             @ConfigFloat(defaultValue = 4.5f, exclusiveMin = true) float slowDurationSeconds,
             @ConfigFloat(defaultValue = 12f, exclusiveMin = true) float projectileSpeed,

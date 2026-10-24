@@ -26,6 +26,7 @@ public final class ReturnToForestSkill extends AbstractRuntime<ReturnToForestSki
         context.actions().damage(context.user(), target, getConfig().damage(), DamageType.SKILL);
         context.actions().knockbackAwayFrom(context.user(), target, getConfig().knockbackDistance());
         context.actions().emitEffect(target, getConfig().impactEffect(), getConfig().effectScale(), getConfig().effectDurationSeconds());
+        context.actions().addUltimatePoints(context.user(), getConfig().ultimatePoints());
 
         return true;
     }
@@ -33,6 +34,7 @@ public final class ReturnToForestSkill extends AbstractRuntime<ReturnToForestSki
 
     public record Config(
             @ConfigFloat(defaultValue = 30f) @DisplayValue float damage,
+            @ConfigFloat(defaultValue = 10f, exclusiveMin = true) float ultimatePoints,
             @ConfigFloat(defaultValue = 1.4f) float knockbackDistance,
             @ConfigResource(name = "impactEffectId", defaultValue = "mojibattle:wind") ResourceId impactEffect,
             @ConfigFloat(defaultValue = 4.5f, exclusiveMin = true) float effectScale,

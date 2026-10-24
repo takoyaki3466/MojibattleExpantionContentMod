@@ -45,8 +45,8 @@ public final class ForestUniverseUltimate extends AbstractRuntime<ForestUniverse
             @ConfigFloat(defaultValue = 100f) float baseDamage,
             @ConfigResource(name = "activationEffectId", defaultValue = "mojibattle:family") ResourceId activationEffect,
             @ConfigResource(name = "impactEffectId", defaultValue = "mojibattle:impact") ResourceId impactEffect,
-            @ConfigFloat(defaultValue = 8f, exclusiveMin = true) float activationEffectScale,
-            @ConfigFloat(defaultValue = 6f, exclusiveMin = true) float impactEffectScale,
+            @ConfigFloat(defaultValue = 32f, exclusiveMin = true) float activationEffectScale,
+            @ConfigFloat(defaultValue = 24f, exclusiveMin = true) float impactEffectScale,
             @ConfigFloat(defaultValue = .9f, exclusiveMin = true) float effectDurationSeconds) {
     }
 }

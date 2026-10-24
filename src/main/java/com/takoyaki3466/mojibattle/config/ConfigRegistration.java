@@ -29,58 +29,48 @@ public final class ConfigRegistration {
     private ConfigRegistration() {
     }
 
-    /** 設定可能なスキルを登録する。 */
-    public static <C, R extends SkillRuntime> RegistryHandle<SkillImpl> skill(
-            MojiBattleRegister.Skill registry, String namespace, String path,
-            Class<C> configType, Function<C, R> runtimeFactory) {
+    /**
+     * 設定可能なスキルを登録する。
+     */
+    public static <C, R extends SkillRuntime> RegistryHandle<SkillImpl> skill(MojiBattleRegister.Skill registry, String namespace, String path, Class<C> configType, Function<C, R> runtimeFactory) {
         ContextualParser<C> parser = parser(namespace, path, configType);
-        return registry.register(path,
-                source -> runtimeFactory.apply(parser.parse(source)), parser::validate,
-                (source, multiplier) -> AbilityPresentation.fromDescription(
-                        source, parser.displayValues(source, multiplier)));
+        return registry.register(path, source -> runtimeFactory.apply(parser.parse(source)), parser::validate, (source, multiplier) -> AbilityPresentation.fromDescription(source, parser.displayValues(source, multiplier)));
     }
 
-    /** 設定可能な必殺技を登録する。 */
-    public static <C, R extends UltimateRuntime> RegistryHandle<UltimateImpl> ultimate(
-            MojiBattleRegister.Ultimate registry, String namespace, String path,
-            Class<C> configType, Function<C, R> runtimeFactory) {
+    /**
+     * 設定可能な必殺技を登録する。
+     */
+    public static <C, R extends UltimateRuntime> RegistryHandle<UltimateImpl> ultimate(MojiBattleRegister.Ultimate registry, String namespace, String path, Class<C> configType, Function<C, R> runtimeFactory) {
         ContextualParser<C> parser = parser(namespace, path, configType);
-        return registry.register(path,
-                source -> runtimeFactory.apply(parser.parse(source)), parser::validate,
-                source -> AbilityPresentation.fromDescription(
-                        source, parser.displayValues(source, 1f)));
+        return registry.register(path, source -> runtimeFactory.apply(parser.parse(source)), parser::validate, source -> AbilityPresentation.fromDescription(source, parser.displayValues(source, 1f)));
     }
 
-    /** 設定可能なパッシブを登録する。 */
-    public static <C, R extends PassiveRuntime> RegistryHandle<PassiveImpl> passive(
-            MojiBattleRegister.Passive registry, String namespace, String path,
-            Class<C> configType, Function<C, R> runtimeFactory) {
+    /**
+     * 設定可能なパッシブを登録する。
+     */
+    public static <C, R extends PassiveRuntime> RegistryHandle<PassiveImpl> passive(MojiBattleRegister.Passive registry, String namespace, String path, Class<C> configType, Function<C, R> runtimeFactory) {
         ContextualParser<C> parser = parser(namespace, path, configType);
-        return registry.register(path,
-                source -> runtimeFactory.apply(parser.parse(source)), parser::validate,
-                source -> AbilityPresentation.fromDescription(
-                        source, parser.displayValues(source, 1f)));
+        return registry.register(path, source -> runtimeFactory.apply(parser.parse(source)), parser::validate, source -> AbilityPresentation.fromDescription(source, parser.displayValues(source, 1f)));
     }
 
-    /** 設定可能な補助発動能力を登録する。 */
-    public static <C, R extends SupportAbilityRuntime> RegistryHandle<SupportAbilityImpl> supportAbility(
-            MojiBattleRegister.SupportAbility registry, String namespace, String path,
-            Class<C> configType, Function<C, R> runtimeFactory) {
+    /**
+     * 設定可能な補助発動能力を登録する。
+     */
+    public static <C, R extends SupportAbilityRuntime> RegistryHandle<SupportAbilityImpl> supportAbility(MojiBattleRegister.SupportAbility registry, String namespace, String path, Class<C> configType, Function<C, R> runtimeFactory) {
         ContextualParser<C> parser = parser(namespace, path, configType);
         return registry.register(path, parser::parse, runtimeFactory);
     }
 
-    /** 設定可能な補助パッシブを登録する。 */
-    public static <C, R extends SupportPassiveRuntime> RegistryHandle<SupportPassiveImpl> supportPassive(
-            MojiBattleRegister.SupportPassive registry, String namespace, String path,
-            Class<C> configType, Function<C, R> runtimeFactory) {
+    /**
+     * 設定可能な補助パッシブを登録する。
+     */
+    public static <C, R extends SupportPassiveRuntime> RegistryHandle<SupportPassiveImpl> supportPassive(MojiBattleRegister.SupportPassive registry, String namespace, String path, Class<C> configType, Function<C, R> runtimeFactory) {
         ContextualParser<C> parser = parser(namespace, path, configType);
         return registry.register(path, parser::parse, runtimeFactory);
     }
 
     private static <C> ContextualParser<C> parser(String namespace, String path, Class<C> configType) {
-        String abilityId = Objects.requireNonNull(namespace, "Namespace is required") + ":"
-                + Objects.requireNonNull(path, "Ability path is required");
+        String abilityId = Objects.requireNonNull(namespace, "Namespace is required") + ":" + Objects.requireNonNull(path, "Ability path is required");
         return new ContextualParser<>(abilityId, configType);
     }
 
@@ -118,8 +108,7 @@ public final class ConfigRegistration {
         }
 
         private IllegalArgumentException contextual(String subject, IllegalArgumentException cause) {
-            return new IllegalArgumentException(
-                    "Ability '" + abilityId + "' " + subject + " is invalid: " + cause.getMessage(), cause);
+            return new IllegalArgumentException("Ability '" + abilityId + "' " + subject + " is invalid: " + cause.getMessage(), cause);
         }
     }
 }

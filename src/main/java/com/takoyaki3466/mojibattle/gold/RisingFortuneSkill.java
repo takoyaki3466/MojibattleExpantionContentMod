@@ -22,11 +22,13 @@ public final class RisingFortuneSkill extends AbstractRuntime<RisingFortuneSkill
             return false;
         }
         context.actions().spawnDelayedStrike(context.user(), context.target(), new DelayedStrikeSpec(getConfig().dropDelaySeconds(), DamageRequest.of(getConfig().damage(), DamageType.SKILL), getConfig().effectId(), getConfig().goldTexture(), getConfig().effectScale()));
+        context.actions().addUltimatePoints(context.user(), getConfig().ultimatePoints());
         return true;
     }
 
     public record Config(
             @ConfigFloat(defaultValue = 38f) float damage,
+            @ConfigFloat(defaultValue = 18f, exclusiveMin = true) float ultimatePoints,
             @ConfigFloat(defaultValue = .55f) float dropDelaySeconds,
             @ConfigResource(defaultValue = "mojibattle:stock") ResourceId effectId,
             @ConfigResource(defaultValue = "expansion_mod:textures/gold.png") ResourceId goldTexture,

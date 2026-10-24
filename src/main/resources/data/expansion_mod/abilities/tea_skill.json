@@ -6,6 +6,7 @@
   "cooldownSeconds": 7.0,
   "parameters": {
     "damage": 34.0,
+    "ultimatePoints": 18.0,
     "slowMultiplier": 0.62,
     "slowDurationSeconds": 4.5,
     "projectileSpeed": 12.0,

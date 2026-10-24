@@ -6,6 +6,7 @@
   "cooldownSeconds": 3.0,
   "parameters": {
     "damage": 28.0,
+    "ultimatePoints": 10.0,
     "knockbackDistance": 1.4,
     "impactEffectId": "mojibattle:wind",
     "effectScale": 4.5,

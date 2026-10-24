@@ -22,11 +22,13 @@ public final class AccumulationSkill extends AbstractRuntime<AccumulationSkill.C
             return false;
         }
         context.actions().spawnDelayedStrike(context.user(), context.target(), new DelayedStrikeSpec(getConfig().dropDelaySeconds(), DamageRequest.of(getConfig().damage(), DamageType.SKILL), getConfig().effectId(), getConfig().sigmaTexture(), getConfig().effectScale()));
+        context.actions().addUltimatePoints(context.user(), getConfig().ultimatePoints());
         return true;
     }
 
     public record Config(
             @ConfigFloat(defaultValue = 12f) float damage,
+            @ConfigFloat(defaultValue = 12f, exclusiveMin = true) float ultimatePoints,
             @ConfigFloat(defaultValue = .5f) float dropDelaySeconds,
             @ConfigResource(defaultValue = "mojibattle:impact") ResourceId effectId,
             @ConfigResource(defaultValue = "expansion_mod:textures/sigma.png") ResourceId sigmaTexture,

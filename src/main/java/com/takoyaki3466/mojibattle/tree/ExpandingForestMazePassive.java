@@ -43,7 +43,7 @@ public final class ExpandingForestMazePassive extends AbstractRuntime<ExpandingF
             @ConfigFloat(defaultValue = 1f) float treeMultiplier,
             @ConfigFloat(defaultValue = 1.35f) float groveMultiplier,
             @ConfigFloat(defaultValue = 1.75f) float forestMultiplier,
-            @ConfigFloat(defaultValue = 2.4f) float universeMultiplier) implements WoodRank.Progression {
+            @ConfigFloat(defaultValue = 6f) float universeMultiplier) implements WoodRank.Progression {
 
         public Config {
             try {

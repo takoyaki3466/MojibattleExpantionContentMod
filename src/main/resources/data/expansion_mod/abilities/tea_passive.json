@@ -7,6 +7,7 @@
     "skillStateDurationSeconds": 3.0,
     "ultimateStateDurationSeconds": 12.0,
     "ultimateRefundRatio": 0.5,
+    "attackMultiplier": 1.25,
     "attackIntervalMultiplier": 0.58,
     "projectileCountDelta": 2,
     "spreadDegrees": 42.0,
